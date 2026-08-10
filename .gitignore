@@ -2,3 +2,7 @@
 *.bak
 *_backup.zip
 *.png
+
+# 배포하지 않는 작업용 팩
+RR.zip
+cos260523.zip
