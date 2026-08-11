@@ -14,6 +14,10 @@
      글자 하나에 그림 한 장을 담는 방식으로 넣는다. 창 제목에 그 글자를 적으면
      창 위에 그림이 그려진다. 위로 26칸 올려 붙도록 값(39)을 맞춰 두었다.
 
+     뽑기 미리보기 창 그림은 따로 그리지 않고, 모자 창 그림에서 위쪽 단추 줄만
+     지워서 그 자리에 만든다 (칸 자리와 화살표는 그대로 쓴다). 지운 자리에는
+     창 제목 글자가 들어간다.
+
   3) 치장 창의 단추들은 그림에 이미 그려져 있으므로, 그 자리에 놓는 물건은
      보이지 않아야 한다. 아무것도 안 보이는 물건 모양을 하나 만들어 넣는다.
 
@@ -52,6 +56,20 @@ try {
     $out.Save($merged, [System.Drawing.Imaging.ImageFormat]::Png)
     $out.Dispose(); $base.Dispose(); $frame.Dispose()
 
+    # ── 2) 뽑기 미리보기 창 그림 (모자 창에서 단추 줄만 지운 것) ──
+    #    지우는 자리: 테두리 안쪽 가로 3~172, 세로 41~60 (첫 칸 줄이 있던 자리)
+    $hat  = [System.Drawing.Bitmap]::FromFile((Join-Path $Gui 'cos_hat.png'))
+    $prev = New-Object System.Drawing.Bitmap($hat)
+    $hat.Dispose()
+    $panel = New-Object System.Drawing.SolidBrush([System.Drawing.Color]::FromArgb(255, 0xB9, 0xBC, 0xC4))
+    $g2 = [System.Drawing.Graphics]::FromImage($prev)
+    $g2.CompositingMode = 'SourceCopy'
+    $g2.FillRectangle($panel, 3, 41, 170, 20)
+    $g2.Dispose(); $panel.Dispose()
+    $previewPath = Join-Path $tmp 'gacha_preview.png'
+    $prev.Save($previewPath, [System.Drawing.Imaging.ImageFormat]::Png)
+    $prev.Dispose()
+
     # ── 3) 아무것도 안 보이는 물건 그림 ──────────────────────────
     $blank = New-Object System.Drawing.Bitmap(16, 16, [System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
     $blankPath = Join-Path $tmp 'blank.png'
@@ -82,23 +100,27 @@ try {
         foreach ($n in 'cos_home','cos_hat','cos_back','cos_hand') {
             Put-File "assets/taggame/textures/gui/$n.png" (Join-Path $Gui "$n.png")
         }
+        Put-File 'assets/taggame/textures/gui/gacha_preview.png' $previewPath
 
-        # 글자 하나 = 그림 한 장. 앞의 두 글자는 좌우로 밀어 주는 빈 글자다.
+        # 글자 하나 = 그림 한 장. 앞의 세 글자는 좌우로 밀어 주는 빈 글자다.
         #   e080 : 왼쪽으로 8칸 (제목이 시작되는 자리를 창 왼쪽 끝으로 되돌린다)
         #   e081 : 그림 폭만큼 되돌리기
-        #   e090~e093 : 첫 화면 / 모자 / 등 / 왼손 그림
-        Put-Text 'assets/taggame/font/gui.json' @'
+        #   e082 : 다시 제목 글자가 원래 시작하던 자리로 (그림 뒤에 글자를 적을 때)
+        #   e090~e093 : 첫 화면 / 모자 / 등 / 왼손
+        #   e094 : 뽑기 미리보기
+        $guiFont = @"
 {
   "providers": [
-    { "type": "space", "advances": { "": -8, "": -257 } },
-    { "type": "bitmap", "file": "taggame:gui/cos_home.png", "height": 256, "ascent": 39, "chars": [""] },
-    { "type": "bitmap", "file": "taggame:gui/cos_hat.png",  "height": 256, "ascent": 39, "chars": [""] },
-    { "type": "bitmap", "file": "taggame:gui/cos_back.png", "height": 256, "ascent": 39, "chars": [""] },
-    { "type": "bitmap", "file": "taggame:gui/cos_hand.png", "height": 256, "ascent": 39, "chars": [""] }
+    { "type": "space", "advances": { "$([char]0xE080)": -8, "$([char]0xE081)": -257, "$([char]0xE082)": 9 } },
+    { "type": "bitmap", "file": "taggame:gui/cos_home.png",      "height": 256, "ascent": 39, "chars": ["$([char]0xE090)"] },
+    { "type": "bitmap", "file": "taggame:gui/cos_hat.png",       "height": 256, "ascent": 39, "chars": ["$([char]0xE091)"] },
+    { "type": "bitmap", "file": "taggame:gui/cos_back.png",      "height": 256, "ascent": 39, "chars": ["$([char]0xE092)"] },
+    { "type": "bitmap", "file": "taggame:gui/cos_hand.png",      "height": 256, "ascent": 39, "chars": ["$([char]0xE093)"] },
+    { "type": "bitmap", "file": "taggame:gui/gacha_preview.png", "height": 256, "ascent": 39, "chars": ["$([char]0xE094)"] }
   ]
 }
-'@
-
+"@
+        Put-Text 'assets/taggame/font/gui.json' $guiFont
         Put-File 'assets/taggame/textures/item/blank.png' $blankPath
         Put-Text 'assets/taggame/models/item/blank.json' @'
 {

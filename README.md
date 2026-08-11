@@ -19,6 +19,19 @@
 
 치장을 늘리거나 이름을 고칠 때: `cosmetic-items.yml` 수정 → `make-cosmetics.ps1` 실행 → (모양이 새로 늘었으면) `cos-pack.ps1` 실행 후 아래 갱신 절차.
 
+`make-cosmetics.ps1`이 만드는 창(`menus/cos_*.yml`)은 지금은 쓰이지 않는다. `/치장` 창은 꼬리잡기 플러그인이 직접 그린다. 치장 정의(`cosmetics/cosmetics.yml`)는 계속 필요하다.
+
+## 창 그림 (GUI)
+
+| 파일 | 하는 일 |
+|---|---|
+| `gui/generic_54_base.png` | 54칸 상자 창에서 칸 자리와 아래 소지품 칸만 그린 원본 |
+| `gui/generic_54_frame.png` | 그 위에 씌우는 테두리·판 (위쪽 26칸이 여백) |
+| `gui/cos_home.png` `cos_hat.png` `cos_back.png` `cos_hand.png` | 치장 창 네 화면 |
+| `gui-pack.ps1` | 위 두 장을 합쳐 상자 창 바탕을 만들고, 치장 창 네 장과 투명 물건 모양을 `DB.zip`에 넣는다 |
+
+치장 창 그림은 창 제목에 글자 하나로 얹는 방식이라 위치 값(`ascent 39`)과 칸 번호가 서로 맞아야 한다. 그림에서 칸 자리를 옮겼다면 꼬리잡기 플러그인의 치장 창 칸 번호도 함께 봐야 한다.
+
 ## 갱신 절차
 
 팩을 수정한 뒤:
