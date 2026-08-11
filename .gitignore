@@ -3,6 +3,9 @@
 *_backup.zip
 *.png
 
+# 창 그림은 원본이므로 예외로 추적한다 (gui-pack.ps1 이 이것을 읽는다)
+!gui/*.png
+
 # 배포하지 않는 작업용 팩
 RR.zip
 cos260523.zip

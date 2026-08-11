@@ -1,0 +1,126 @@
+<#
+  gui 폴더의 창 그림을 DB.zip 안에 넣는 스크립트.
+
+  하는 일 세 가지.
+
+  1) 상자 창(54칸)의 바탕 그림을 새 것으로 바꾼다.
+     원본이 두 장으로 나뉘어 있다.
+       generic_54_base.png  … 칸 자리와 아래쪽 소지품 칸만 있고 테두리가 없다.
+                               게임이 원래 자리에 그대로 쓰는 그림이다.
+       generic_54_frame.png … 바깥 테두리와 판. 위쪽에 26칸만큼 여백을 두고 그려져 있다.
+     두 장을 26칸만큼 맞춰 겹쳐서 한 장으로 만들어 넣는다.
+
+  2) 치장 창 네 장(첫 화면·모자·등·왼손)은 겹쳐 그리는 그림이라
+     글자 하나에 그림 한 장을 담는 방식으로 넣는다. 창 제목에 그 글자를 적으면
+     창 위에 그림이 그려진다. 위로 26칸 올려 붙도록 값(39)을 맞춰 두었다.
+
+  3) 치장 창의 단추들은 그림에 이미 그려져 있으므로, 그 자리에 놓는 물건은
+     보이지 않아야 한다. 아무것도 안 보이는 물건 모양을 하나 만들어 넣는다.
+
+  그림을 고쳤으면 이 스크립트를 다시 돌리고, 그 다음 README의 갱신 절차를 따른다.
+#>
+$ErrorActionPreference = 'Stop'
+Add-Type -AssemblyName System.IO.Compression.FileSystem
+Add-Type -AssemblyName System.Drawing
+
+$Root = $PSScriptRoot
+$Gui  = Join-Path $Root 'gui'
+$Zip  = Join-Path $Root 'DB.zip'
+if (-not (Test-Path $Zip)) { throw "DB.zip이 없습니다: $Zip" }
+if (-not (Test-Path $Gui)) { throw "gui 폴더가 없습니다: $Gui" }
+
+# 테두리 그림이 위에 두고 있는 여백. 이만큼 올려야 창의 맨 위와 맞는다.
+$FrameTop = 26
+
+$tmp = Join-Path ([IO.Path]::GetTempPath()) ("guipack_" + [Guid]::NewGuid().ToString('N'))
+New-Item -ItemType Directory -Force $tmp | Out-Null
+
+try {
+    # ── 1) 상자 창 바탕 한 장으로 합치기 ─────────────────────────
+    $base  = [System.Drawing.Bitmap]::FromFile((Join-Path $Gui 'generic_54_base.png'))
+    $frame = [System.Drawing.Bitmap]::FromFile((Join-Path $Gui 'generic_54_frame.png'))
+    $out   = New-Object System.Drawing.Bitmap(256, 256, [System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
+    $g     = [System.Drawing.Graphics]::FromImage($out)
+    $g.CompositingMode = 'SourceOver'
+    $g.InterpolationMode = 'NearestNeighbor'
+    $g.PixelOffsetMode = 'Half'
+    $g.DrawImage($base, 0, 0, 256, 256)
+    $g.DrawImage($frame, (New-Object System.Drawing.Rectangle(0, -$FrameTop, 256, 256)),
+                 0, 0, 256, 256, [System.Drawing.GraphicsUnit]::Pixel)
+    $g.Dispose()
+    $merged = Join-Path $tmp 'generic_54.png'
+    $out.Save($merged, [System.Drawing.Imaging.ImageFormat]::Png)
+    $out.Dispose(); $base.Dispose(); $frame.Dispose()
+
+    # ── 3) 아무것도 안 보이는 물건 그림 ──────────────────────────
+    $blank = New-Object System.Drawing.Bitmap(16, 16, [System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
+    $blankPath = Join-Path $tmp 'blank.png'
+    $blank.Save($blankPath, [System.Drawing.Imaging.ImageFormat]::Png)
+    $blank.Dispose()
+
+    # ── zip 에 넣기 ──────────────────────────────────────────────
+    $archive = [System.IO.Compression.ZipFile]::Open($Zip, 'Update')
+
+    function Put-Text([string]$entryName, [string]$text) {
+        $old = $script:archive.GetEntry($entryName)
+        if ($old) { $old.Delete() }
+        $e = $script:archive.CreateEntry($entryName, [System.IO.Compression.CompressionLevel]::Optimal)
+        $sw = New-Object System.IO.StreamWriter($e.Open(), (New-Object System.Text.UTF8Encoding($false)))
+        $sw.Write($text); $sw.Flush(); $sw.Dispose()
+    }
+    function Put-File([string]$entryName, [string]$sourcePath) {
+        $old = $script:archive.GetEntry($entryName)
+        if ($old) { $old.Delete() }
+        [void][System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile(
+            $script:archive, $sourcePath, $entryName,
+            [System.IO.Compression.CompressionLevel]::Optimal)
+    }
+
+    try {
+        Put-File 'assets/minecraft/textures/gui/container/generic_54.png' $merged
+
+        foreach ($n in 'cos_home','cos_hat','cos_back','cos_hand') {
+            Put-File "assets/taggame/textures/gui/$n.png" (Join-Path $Gui "$n.png")
+        }
+
+        # 글자 하나 = 그림 한 장. 앞의 두 글자는 좌우로 밀어 주는 빈 글자다.
+        #   e080 : 왼쪽으로 8칸 (제목이 시작되는 자리를 창 왼쪽 끝으로 되돌린다)
+        #   e081 : 그림 폭만큼 되돌리기
+        #   e090~e093 : 첫 화면 / 모자 / 등 / 왼손 그림
+        Put-Text 'assets/taggame/font/gui.json' @'
+{
+  "providers": [
+    { "type": "space", "advances": { "": -8, "": -257 } },
+    { "type": "bitmap", "file": "taggame:gui/cos_home.png", "height": 256, "ascent": 39, "chars": [""] },
+    { "type": "bitmap", "file": "taggame:gui/cos_hat.png",  "height": 256, "ascent": 39, "chars": [""] },
+    { "type": "bitmap", "file": "taggame:gui/cos_back.png", "height": 256, "ascent": 39, "chars": [""] },
+    { "type": "bitmap", "file": "taggame:gui/cos_hand.png", "height": 256, "ascent": 39, "chars": [""] }
+  ]
+}
+'@
+
+        Put-File 'assets/taggame/textures/item/blank.png' $blankPath
+        Put-Text 'assets/taggame/models/item/blank.json' @'
+{
+  "parent": "minecraft:item/generated",
+  "textures": { "layer0": "taggame:item/blank" }
+}
+'@
+        Put-Text 'assets/taggame/items/blank.json' @'
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "taggame:item/blank"
+  }
+}
+'@
+    } finally {
+        $archive.Dispose()
+    }
+} finally {
+    Remove-Item -Recurse -Force $tmp -ErrorAction SilentlyContinue
+}
+
+$sha = (Get-FileHash -Algorithm SHA1 $Zip).Hash.ToLower()
+Write-Host "창 그림을 DB.zip에 넣었습니다." -ForegroundColor Green
+Write-Host "DB.zip SHA-1 = $sha" -ForegroundColor Cyan
