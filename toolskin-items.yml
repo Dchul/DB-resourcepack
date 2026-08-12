@@ -14,6 +14,122 @@
 
 치장:
 
+  glass_hammer_frozen_tuna:
+    이름: "냉동참치 검"
+    종류: 검
+    모양: "a2125e0f-b625-4704-aa19-1d04a9979309"
+  pink_ribbonheart_sword_1:
+    이름: "분홍 리본 검"
+    종류: 검
+    모양: "58a90edf-1b4e-46a0-90aa-06ff59baf1f5"
+  blue_demon_sword:
+    이름: "악마의 군주 검"
+    종류: 검
+    모양: "83a46e10-a8d0-42c3-947e-7d75b3c4f52c"
+  plny_popsicle_sword:
+    이름: "알록달록 아이스바 검"
+    종류: 검
+    모양: "f4494281-6ffa-4686-b4c9-b9a44ae3a8cf"
+  glass_hammer_tuna:
+    이름: "참치 검"
+    종류: 검
+    모양: "0430c02f-0149-4919-8a80-41809270d0a9"
+  dreamstate_sword_1:
+    이름: "푸른 공명의 검"
+    종류: 검
+    모양: "c271c202-ef06-43db-9e58-2fbc5809b7ad"
+  ribbonheart_sword_1:
+    이름: "푸른 리본 검"
+    종류: 검
+    모양: "3e06ae92-4190-4523-a485-5349f3cb5c70"
+  dreamstate_sword_1_v2:
+    이름: "하얀 공명의 검"
+    종류: 검
+    모양: "13780cc0-d96c-412b-b16d-71627b24faa7"
+  pink_ribbonheart_pickaxe_1:
+    이름: "분홍 리본 곡괭이"
+    종류: 곡괭이
+    모양: "ea1a2d8c-342f-48b9-966f-5be27738658b"
+  pink_butterfly_pickaxe_1:
+    이름: "분홍 봄나비 곡괭이"
+    종류: 곡괭이
+    모양: "d090851e-8af0-446b-a03e-d77e0ad063cc"
+  puppy_pickaxe_1:
+    이름: "브라운 퍼피 곡괭이"
+    종류: 곡괭이
+    모양: "5b34f94f-b892-4498-8a38-cca815cb900d"
+  puppy_pickaxe_2:
+    이름: "블랙 퍼피 곡괭이"
+    종류: 곡괭이
+    모양: "656cbf49-8fb5-4090-8f9c-0f188f974792"
+  evil_inspector_pickaxe_1:
+    이름: "지옥의 군주 곡괭이"
+    종류: 곡괭이
+    모양: "df21fd50-2b30-41ee-bb46-21da816604f5"
+  ribbonheart_pickaxe_1:
+    이름: "푸른 리본 곡괭이"
+    종류: 곡괭이
+    모양: "bc500eef-2e5f-40ef-b6ef-d55d1c91a375"
+  blue_demon_pickaxe_1:
+    이름: "푸른 악마의 군주 곡괭이"
+    종류: 곡괭이
+    모양: "6c5a9536-7f56-4fc3-a8d7-99b6ce316735"
+  puppy_pickaxe_3:
+    이름: "핑크 퍼피 곡괭이"
+    종류: 곡괭이
+    모양: "1f7c769c-9ae1-4772-b0a9-84ce7b32a4ec"
+  dreamstate_pickaxe_1a_v2:
+    이름: "하얀 공명의 곡괭이"
+    종류: 곡괭이
+    모양: "643d99d6-25af-4311-9924-0af5cec0d7df"
+  puppy_pickaxe_4:
+    이름: "화이트 퍼피 곡괭이"
+    종류: 곡괭이
+    모양: "44c102d6-3fb7-46c6-b37b-ebc5a6c311a2"
+  pink_ribbonheart_hoe_1:
+    이름: "분홍 리본 괭이"
+    종류: 괭이
+    모양: "a7c96f74-da4a-4557-8aac-bfeb7949c061"
+  pink_butterfly_hoe_1:
+    이름: "분홍 봄나비 괭이"
+    종류: 괭이
+    모양: "1fc03c06-f8c4-4151-b1ef-7c6ed07d8739"
+  puppy_hoe_1:
+    이름: "브라운 퍼피 괭이"
+    종류: 괭이
+    모양: "4e8652e6-ea12-4da7-b10e-c82dba911a8b"
+  puppy_hoe_2:
+    이름: "블랙 퍼피 괭이"
+    종류: 괭이
+    모양: "01c2f34e-d5b2-4dcf-bdce-42a0bf551c9a"
+  evil_inspector_hoe_1:
+    이름: "지옥의 군주 괭이"
+    종류: 괭이
+    모양: "191eb57c-c499-4b71-9411-4e2ab3f9c4c9"
+  glass_hammer_duck:
+    이름: "청둥오리 괭이"
+    종류: 괭이
+    모양: "156da63b-e340-40a7-a742-6eee2f543790"
+  ribbonheart_hoe_1:
+    이름: "푸른 리본 괭이"
+    종류: 괭이
+    모양: "dbb2bcb5-5156-4c9a-8a9b-ab41000ef4b3"
+  blue_demon_hoe_1:
+    이름: "푸른 악마의 군주 괭이"
+    종류: 괭이
+    모양: "f64937f0-10d7-46ee-a95e-4489adc6c5d4"
+  puppy_hoe_3:
+    이름: "핑크 퍼피 괭이"
+    종류: 괭이
+    모양: "b4552d90-b09a-4b12-8f19-d0d57affc0ac"
+  dreamstate_hoe_1_v2:
+    이름: "하얀 공명의 괭이"
+    종류: 괭이
+    모양: "5e8f6856-fd3e-41e8-af2d-07c658dcc47e"
+  puppy_hoe_4:
+    이름: "화이트 퍼피 괭이"
+    종류: 괭이
+    모양: "12d201ad-bef7-4b8a-ac80-2fa9857bc633"
   fishing_rod_0013:
     이름: "UFO 낚싯대"
     종류: 낚싯대
@@ -193,6 +309,11 @@
     종류: 낚싯대
     모양: "6c4e9ac1-4ed3-4483-acdc-f0b25ca28ebb"
     던진모양: "3e1dafd0-ea82-4d6c-a70f-9de4097b9fa1"
+  bunny_fishing_rod_1:
+    이름: "솜토끼 낚싯대"
+    종류: 낚싯대
+    모양: "a1b7d85b-9a76-49a8-8113-dcc82d8a1481"
+    던진모양: "022bb215-9819-4499-be04-234fd9b5edb1"
   fishing_rod_0051:
     이름: "수달 낚싯대"
     종류: 낚싯대
@@ -268,11 +389,6 @@
     종류: 낚싯대
     모양: "0990245d-537b-4fe5-9822-8db4f89e2abe"
     던진모양: "6ed756db-5c2b-4781-b688-c3c9f623e9d5"
-  amethyst_fishing_rod:
-    이름: "자수정 도트 낚싯대"
-    종류: 낚싯대
-    모양: "ec0c88b0-b51b-4fe9-8b5c-39628cd61706"
-    던진모양: "1d1431bf-8bca-44c4-adfa-01e242bd2580"
   jungles_heart_fishing_rod:
     이름: "정글 낚싯대"
     종류: 낚싯대
@@ -313,11 +429,6 @@
     종류: 낚싯대
     모양: "8cd0f28f-5a70-4ce1-99fa-af8887140c50"
     던진모양: "f195e2b5-c717-495c-b7fe-a08a95761188"
-  bunny_fishing_rod_1:
-    이름: "토끼인형 낚싯대"
-    종류: 낚싯대
-    모양: "a1b7d85b-9a76-49a8-8113-dcc82d8a1481"
-    던진모양: "022bb215-9819-4499-be04-234fd9b5edb1"
   fishing_rod_0048:
     이름: "파스텔 낚싯대"
     종류: 낚싯대
@@ -338,6 +449,11 @@
     종류: 낚싯대
     모양: "efe761c6-27a2-4f73-aef1-6bc9218d4568"
     던진모양: "cba1b060-cf03-46ba-b153-c80561687355"
+  blue_demon_fishing_rod_1:
+    이름: "푸른 악마의 군주 낚싯대"
+    종류: 낚싯대
+    모양: "d63699d8-1376-438e-b780-51d4340a21e9"
+    던진모양: "d6833f02-daf5-49dd-990f-ec3b314c97eb"
   frayed_fishing_rod:
     이름: "프레이드 낚싯대"
     종류: 낚싯대
@@ -408,3 +524,127 @@
     종류: 낚싯대
     모양: "ad361bde-25d2-4e53-8632-c5f914cbe6d5"
     던진모양: "d30ee1a0-9b78-41a7-ae30-edf592be597f"
+  glass_hammer_cloud:
+    이름: "구름신 망치"
+    종류: 도끼
+    모양: "2a54dabb-0af2-4872-98a1-b02512f181be"
+  bear_axe_1:
+    이름: "꿀곰 망치"
+    종류: 도끼
+    모양: "c5848235-0e09-4697-8642-5a8b5ad3b8de"
+  malang_ori_axe_1:
+    이름: "말랑 오리 도끼"
+    종류: 도끼
+    모양: "31800b47-bae2-4fdb-9399-9a44dc0c8c14"
+  malang_tokki_axe_1:
+    이름: "말랑 토끼 도끼"
+    종류: 도끼
+    모양: "a8e70984-0a27-4aa6-ac06-00af90ab81d6"
+  easter_bunny_glass_hammer:
+    이름: "버니 요술봉 망치"
+    종류: 도끼
+    모양: "507501fc-0c71-453b-9d92-75e7e83b3c55"
+  cherry_blossom_axe_1:
+    이름: "벚꽃 도끼"
+    종류: 도끼
+    모양: "fcd51876-8ea2-44b3-88cb-8c165ca9e02e"
+  pink_ribbonheart_axe_1:
+    이름: "분홍 리본 도끼"
+    종류: 도끼
+    모양: "f8bd3282-4a86-4c7d-9060-fc9b97053064"
+  pink_ribbonheart_axe_2:
+    이름: "분홍 리본 망치"
+    종류: 도끼
+    모양: "49b6028f-6edb-4b8a-bed7-3251038b12f3"
+  pink_butterfly_axe_1:
+    이름: "분홍 봄나비 도끼"
+    종류: 도끼
+    모양: "80bd528f-e435-408e-b1a9-e3e503d08657"
+  puppy_hammer_1:
+    이름: "브라운 뚱퍼피 망치"
+    종류: 도끼
+    모양: "99fbe4bb-ea27-4014-9ab1-530e83528f58"
+  puppy_axe_1:
+    이름: "브라운 퍼피 도끼"
+    종류: 도끼
+    모양: "90569de9-df35-4314-8d81-9b2296ba3d0b"
+  puppy_hammeraxe_1:
+    이름: "브라운 퍼피 망치"
+    종류: 도끼
+    모양: "9db62e98-ae9c-4775-a23b-eaa023740900"
+  puppy_hammer_2:
+    이름: "블랙 뚱퍼피 망치"
+    종류: 도끼
+    모양: "dff3f1c3-b333-443b-8472-9974655d8eac"
+  puppy_axe_2:
+    이름: "블랙 퍼피 도끼"
+    종류: 도끼
+    모양: "51f906a8-6606-4c24-a8ab-3e7a5cf7ec11"
+  puppy_hammeraxe_2:
+    이름: "블랙 퍼피 망치"
+    종류: 도끼
+    모양: "53c376bc-69a7-4751-9ddf-73e44ead8d83"
+  bunny_axe_1:
+    이름: "솜토끼 망치"
+    종류: 도끼
+    모양: "7a928d1a-4dfa-46a1-8525-b1234184eb71"
+  glass_hammer_snowball:
+    이름: "스노우볼 망치"
+    종류: 도끼
+    모양: "11ef1445-3bbf-4433-843a-e2d228fbe2b3"
+  evil_inspector_axe_1:
+    이름: "지옥의 군주 도끼"
+    종류: 도끼
+    모양: "6f745584-c294-4e43-81a6-5e9baf46d76e"
+  dreamstate_axe_2:
+    이름: "푸른 공명의 망치"
+    종류: 도끼
+    모양: "2bb58bf1-84aa-457d-a840-c29184650240"
+  ribbonheart_axe_1:
+    이름: "푸른 리본 도끼"
+    종류: 도끼
+    모양: "83ba5963-3e68-4f55-9b89-7abb5225bae4"
+  ribbonheart_axe_2:
+    이름: "푸른 리본 망치"
+    종류: 도끼
+    모양: "373c8dcd-083e-4716-b700-232271d4ff6d"
+  blue_demon_axe_1:
+    이름: "푸른 악마의 군주 도끼"
+    종류: 도끼
+    모양: "240592bf-2cbe-4cff-ac27-496bc05caa6e"
+  glass_hammer_cherryblossom:
+    이름: "플라워 망치"
+    종류: 도끼
+    모양: "9a5c31b8-126b-41e9-b7c0-6592f43040ab"
+  puppy_hammer_3:
+    이름: "핑크 뚱퍼피 망치"
+    종류: 도끼
+    모양: "3c7f76d9-1d01-4d0e-b3c8-7996d15c51da"
+  puppy_axe_3:
+    이름: "핑크 퍼피 도끼"
+    종류: 도끼
+    모양: "f8490b08-1ff0-4659-ad93-01af4f05ae67"
+  puppy_hammeraxe_3:
+    이름: "핑크 퍼피 망치"
+    종류: 도끼
+    모양: "ac7d75db-a9ad-419d-a929-2c9a4cf1bf37"
+  dreamstate_axe_1_v2:
+    이름: "하얀 공명의 도끼"
+    종류: 도끼
+    모양: "3975ea8f-1fde-4a76-a329-6ddc6461918f"
+  dreamstate_axe_2_v2:
+    이름: "하얀 공명의 망치"
+    종류: 도끼
+    모양: "a9f0dfee-1f3a-4cd7-98ae-324f9e361fb3"
+  puppy_hammer_4:
+    이름: "화이트 뚱퍼피 망치"
+    종류: 도끼
+    모양: "c54b76b7-abd0-4a59-88c3-02b3a6d6918f"
+  puppy_axe_4:
+    이름: "화이트 퍼피 도끼"
+    종류: 도끼
+    모양: "e95a5ee7-bb28-4423-a4c3-0b817510d8f0"
+  puppy_hammeraxe_4:
+    이름: "화이트 퍼피 망치"
+    종류: 도끼
+    모양: "1e44e8c7-a66b-4aa1-aa37-b279e09445e7"

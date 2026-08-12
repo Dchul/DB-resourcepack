@@ -55,23 +55,37 @@ try {
     $out.Save($merged, [System.Drawing.Imaging.ImageFormat]::Png)
     $out.Dispose(); $base.Dispose(); $frame.Dispose()
 
-    # ── 2) 뽑기 미리보기 창 그림 ─────────────────────────────────
-    #    창 이름까지 그림에 그려져 있다. 위쪽 보라색 띠는 "여기는 비워 둔다"는
-    #    표시일 뿐이라 그대로 두면 창 위에 보라색 막대가 얹히므로 지운다.
-    $prev = New-Object System.Drawing.Bitmap(
-            [System.Drawing.Bitmap]::FromFile((Join-Path $Gui 'gacha_preview.png')))
-    for ($y = 0; $y -lt $prev.Height; $y++) {
-        for ($x = 0; $x -lt $prev.Width; $x++) {
-            $c = $prev.GetPixel($x, $y)
-            if ($c.A -gt 0 -and $c.B -gt 120 -and $c.R -gt 60 -and
-                $c.G -lt ($c.R - 10) -and $c.G -lt ($c.B - 60)) {
-                $prev.SetPixel($x, $y, [System.Drawing.Color]::FromArgb(0, 0, 0, 0))
+    # ── 2) 뽑기 미리보기 창 그림 두 장 ───────────────────────────
+    #    창 이름까지 그림에 그려져 있다. 손질 두 가지.
+    #      · 다른 창 그림들은 256×256 안에서 위에서 37칸 내려온 자리에 창이 그려져
+    #        있다. 미리보기 그림은 그 여백 없이 잘려 오므로 같은 자리에 맞춰 붙인다.
+    #      · 위쪽 보라색 띠는 "여기는 비워 둔다"는 표시일 뿐이라 지운다.
+    $TopPad = 37
+    $previewPaths = @{}
+    foreach ($n in 'gacha_preview','gacha_preview_tool') {
+        $src = [System.Drawing.Bitmap]::FromFile((Join-Path $Gui "$n.png"))
+        $out2 = New-Object System.Drawing.Bitmap(256, 256, [System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
+        $g2 = [System.Drawing.Graphics]::FromImage($out2)
+        $g2.CompositingMode = 'SourceCopy'
+        $g2.InterpolationMode = 'NearestNeighbor'
+        $g2.PixelOffsetMode = 'Half'
+        $g2.DrawImage($src, (New-Object System.Drawing.Rectangle(0, $TopPad, $src.Width, $src.Height)),
+                      0, 0, $src.Width, $src.Height, [System.Drawing.GraphicsUnit]::Pixel)
+        $g2.Dispose(); $src.Dispose()
+        for ($y = 0; $y -lt $out2.Height; $y++) {
+            for ($x = 0; $x -lt $out2.Width; $x++) {
+                $c = $out2.GetPixel($x, $y)
+                if ($c.A -gt 0 -and $c.B -gt 120 -and $c.R -gt 60 -and
+                    $c.G -lt ($c.R - 10) -and $c.G -lt ($c.B - 60)) {
+                    $out2.SetPixel($x, $y, [System.Drawing.Color]::FromArgb(0, 0, 0, 0))
+                }
             }
         }
+        $path = Join-Path $tmp "$n.png"
+        $out2.Save($path, [System.Drawing.Imaging.ImageFormat]::Png)
+        $out2.Dispose()
+        $previewPaths[$n] = $path
     }
-    $previewPath = Join-Path $tmp 'gacha_preview.png'
-    $prev.Save($previewPath, [System.Drawing.Imaging.ImageFormat]::Png)
-    $prev.Dispose()
 
     # ── 3) 아무것도 안 보이는 물건 그림 ──────────────────────────
     $blank = New-Object System.Drawing.Bitmap(16, 16, [System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
@@ -104,15 +118,17 @@ try {
                        'tool_home','tool_axe','tool_hoe','tool_pickaxe','tool_rod','tool_sword') {
             Put-File "assets/taggame/textures/gui/$n.png" (Join-Path $Gui "$n.png")
         }
-        Put-File 'assets/taggame/textures/gui/gacha_preview.png' $previewPath
+        Put-File 'assets/taggame/textures/gui/gacha_preview.png'      $previewPaths['gacha_preview']
+        Put-File 'assets/taggame/textures/gui/gacha_preview_tool.png' $previewPaths['gacha_preview_tool']
 
         # 글자 하나 = 그림 한 장. 앞의 세 글자는 좌우로 밀어 주는 빈 글자다.
         #   e080 : 왼쪽으로 8칸 (제목이 시작되는 자리를 창 왼쪽 끝으로 되돌린다)
         #   e081 : 그림 폭만큼 되돌리기
         #   e082 : 다시 제목 글자가 원래 시작하던 자리로 (그림 뒤에 글자를 적을 때)
         #   e090~e093 : 첫 화면 / 모자 / 등 / 왼손
-        #   e094 : 뽑기 미리보기
+        #   e094 : 뽑기 미리보기 (펫·칭호·치장)
         #   e095~e09a : 도구 치장 — 첫 화면 / 도끼 / 괭이 / 곡괭이 / 낚싯대 / 검
+        #   e09b : 도구 치장 뽑기 미리보기 (위쪽에 갈래 단추가 있다)
         $guiFont = @"
 {
   "providers": [
@@ -127,7 +143,8 @@ try {
     { "type": "bitmap", "file": "taggame:gui/tool_hoe.png",      "height": 256, "ascent": 39, "chars": ["$([char]0xE097)"] },
     { "type": "bitmap", "file": "taggame:gui/tool_pickaxe.png",  "height": 256, "ascent": 39, "chars": ["$([char]0xE098)"] },
     { "type": "bitmap", "file": "taggame:gui/tool_rod.png",      "height": 256, "ascent": 39, "chars": ["$([char]0xE099)"] },
-    { "type": "bitmap", "file": "taggame:gui/tool_sword.png",    "height": 256, "ascent": 39, "chars": ["$([char]0xE09A)"] }
+    { "type": "bitmap", "file": "taggame:gui/tool_sword.png",    "height": 256, "ascent": 39, "chars": ["$([char]0xE09A)"] },
+    { "type": "bitmap", "file": "taggame:gui/gacha_preview_tool.png", "height": 256, "ascent": 39, "chars": ["$([char]0xE09B)"] }
   ]
 }
 "@
