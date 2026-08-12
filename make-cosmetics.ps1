@@ -3,8 +3,8 @@
   이름이 늘어나면 목록 파일만 고치고 이 스크립트를 다시 돌리면 된다.
 #>
 $ErrorActionPreference='Stop'
-$srv="C:\Users\dredr\OneDrive\문서\ServerEngine\servers\server_890160838"
-$src="C:\Users\dredr\OneDrive\바탕 화면\Claude Code\Resourcepacks\cosmetic-items.yml"
+$srv="C:\Users\dredr\Documents\ServerEngine\servers\server_890160838"
+$src="C:\Users\dredr\Desktop\Claude Code\Resourcepacks\cosmetic-items.yml"
 $hmc="$srv\plugins\HMCCosmetics"
 
 $slotMap=@{ '머리'='HELMET'; '상체'='BACKPACK'; '손'='OFFHAND'; '풍선'='BALLOON' }
