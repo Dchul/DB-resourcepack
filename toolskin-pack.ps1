@@ -50,6 +50,43 @@ if ($cur) { $skins += $cur }
 $skins = @($skins | Where-Object { $_.name -and $_.model })
 if ($skins.Count -eq 0) { throw "toolskin-items.yml에서 치장을 하나도 읽지 못했습니다." }
 
+# ── 그림이 안 붙은 면 걷어내기 ───────────────────────────────────
+<#
+  받아 온 모양 중에는 어떤 면에 그림을 지정하지 않은 채로 온 것이 있다.
+  게임은 그런 면을 보라·검정 격자(그림 없음 표시)로 그려 버려서 물건이
+  망가져 보인다 (심해 낚싯대가 그랬다).
+
+  그림이 없는 면은 원래 보이지 않아야 할 면이므로 통째로 빼 버린다.
+  면이 하나도 남지 않은 덩어리도 함께 뺀다.
+#>
+function Remove-BlankFaces([string]$json) {
+    if ($json -notmatch '"#') { return $json }
+    $obj = $json | ConvertFrom-Json
+    if (-not $obj.elements) { return $json }
+
+    $known = @{}
+    if ($obj.textures) {
+        foreach ($p in $obj.textures.PSObject.Properties) { $known[$p.Name] = $true }
+    }
+
+    $keep = New-Object System.Collections.ArrayList
+    $touched = $false
+    foreach ($el in $obj.elements) {
+        if (-not $el.faces) { [void]$keep.Add($el); continue }
+        $left = 0
+        foreach ($fn in @($el.faces.PSObject.Properties.Name)) {
+            $t = $el.faces.$fn.texture
+            $key = if ($t) { ([string]$t).TrimStart('#') } else { $null }
+            if ($key -and $known.ContainsKey($key)) { $left++ }
+            else { $el.faces.PSObject.Properties.Remove($fn); $touched = $true }
+        }
+        if ($left -gt 0) { [void]$keep.Add($el) } else { $touched = $true }
+    }
+    if (-not $touched) { return $json }
+    $obj.elements = $keep.ToArray()
+    return ($obj | ConvertTo-Json -Depth 40 -Compress)
+}
+
 # ── DB.zip 에 넣기 ───────────────────────────────────────────────
 $archive = [System.IO.Compression.ZipFile]::Open($Zip, 'Update')
 
@@ -73,9 +110,12 @@ try {
     foreach ($e in @($archive.Entries | Where-Object { $_.FullName -like "assets/$NS/*" })) { $e.Delete() }
 
     $modelCount = 0
+    $cleaned = 0
     foreach ($m in Get-ChildItem (Join-Path $Src 'models') -Filter *.json -File) {
         $id = [IO.Path]::GetFileNameWithoutExtension($m.Name)
         $json = [IO.File]::ReadAllText($m.FullName, [Text.Encoding]::UTF8)
+        $fixed = Remove-BlankFaces $json
+        if ($fixed -ne $json) { $cleaned++; $json = $fixed }
         $json = $json.Replace("`"$NS" + ":", "`"$NS" + ":item/")
         Put-Text "assets/$NS/models/$id.json" $json
         $modelCount++
@@ -113,7 +153,7 @@ try {
         Put-Text "assets/$NS/items/$($s.id).json" $body
     }
 
-    Write-Host ("도구 치장 : 치장 {0}개, 모양 {1}개, 그림 {2}개" -f $skins.Count, $modelCount, $texCount) -ForegroundColor Green
+    Write-Host ("도구 치장 : 치장 {0}개, 모양 {1}개(손질 {3}개), 그림 {2}개" -f $skins.Count, $modelCount, $texCount, $cleaned) -ForegroundColor Green
 } finally {
     $archive.Dispose()
 }

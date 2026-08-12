@@ -56,35 +56,12 @@ try {
     $out.Dispose(); $base.Dispose(); $frame.Dispose()
 
     # ── 2) 뽑기 미리보기 창 그림 두 장 ───────────────────────────
-    #    창 이름까지 그림에 그려져 있다. 손질 두 가지.
-    #      · 다른 창 그림들은 256×256 안에서 위에서 37칸 내려온 자리에 창이 그려져
-    #        있다. 미리보기 그림은 그 여백 없이 잘려 오므로 같은 자리에 맞춰 붙인다.
-    #      · 위쪽 보라색 띠는 "여기는 비워 둔다"는 표시일 뿐이라 지운다.
-    $TopPad = 37
+    #    창 이름("뽑기 미리보기")과 위쪽 보라색 띠까지 그림에 다 그려져 있으므로
+    #    손대지 않고 그대로 넣는다. 창 제목에는 아무 글자도 적지 않는다
+    #    (적으면 보라색 띠 위에 '큰 상자' 자리 글씨가 겹쳐 보인다).
     $previewPaths = @{}
     foreach ($n in 'gacha_preview','gacha_preview_tool') {
-        $src = [System.Drawing.Bitmap]::FromFile((Join-Path $Gui "$n.png"))
-        $out2 = New-Object System.Drawing.Bitmap(256, 256, [System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
-        $g2 = [System.Drawing.Graphics]::FromImage($out2)
-        $g2.CompositingMode = 'SourceCopy'
-        $g2.InterpolationMode = 'NearestNeighbor'
-        $g2.PixelOffsetMode = 'Half'
-        $g2.DrawImage($src, (New-Object System.Drawing.Rectangle(0, $TopPad, $src.Width, $src.Height)),
-                      0, 0, $src.Width, $src.Height, [System.Drawing.GraphicsUnit]::Pixel)
-        $g2.Dispose(); $src.Dispose()
-        for ($y = 0; $y -lt $out2.Height; $y++) {
-            for ($x = 0; $x -lt $out2.Width; $x++) {
-                $c = $out2.GetPixel($x, $y)
-                if ($c.A -gt 0 -and $c.B -gt 120 -and $c.R -gt 60 -and
-                    $c.G -lt ($c.R - 10) -and $c.G -lt ($c.B - 60)) {
-                    $out2.SetPixel($x, $y, [System.Drawing.Color]::FromArgb(0, 0, 0, 0))
-                }
-            }
-        }
-        $path = Join-Path $tmp "$n.png"
-        $out2.Save($path, [System.Drawing.Imaging.ImageFormat]::Png)
-        $out2.Dispose()
-        $previewPaths[$n] = $path
+        $previewPaths[$n] = Join-Path $Gui "$n.png"
     }
 
     # ── 3) 아무것도 안 보이는 물건 그림 ──────────────────────────
