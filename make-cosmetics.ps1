@@ -165,3 +165,54 @@ foreach($mk in $order){
 }
 
 Write-Host ("치장 {0}개, 창 {1}개 만듦: {2}" -f $items.Count,$made.Count,($made -join ', '))
+
+# ── 치장 아래 끝 높이 표 ─────────────────────────────────────
+#  치장 뽑기 기계 위에서 돌아가는 치장이 상자에 파묻히지 않게 하려면
+#  "그 치장의 모양이 어디서부터 시작하는지"를 꼬리잡기 쪽이 알아야 한다.
+#  모양 파일에서 가장 아래 지점을 재어 표로 적어 둔다 (한 칸 = 16).
+$rootDir=Split-Path $src -Parent
+
+function Model-Bottom([string]$path){
+  $j = Get-Content $path -Raw -Encoding UTF8 | ConvertFrom-Json
+  $min = $null
+  foreach($e in $j.elements){
+    $x1=[double]$e.from[0]; $y1=[double]$e.from[1]; $z1=[double]$e.from[2]
+    $x2=[double]$e.to[0];   $y2=[double]$e.to[1];   $z2=[double]$e.to[2]
+    $ys=@()
+    if($e.rotation -and $e.rotation.angle -and [double]$e.rotation.angle -ne 0){
+      # 기울어진 조각은 여덟 모서리를 실제로 돌려 보고 가장 낮은 점을 찾는다
+      $a=[double]$e.rotation.angle * [Math]::PI / 180.0
+      $ax=[string]$e.rotation.axis
+      $ox=[double]$e.rotation.origin[0]; $oy=[double]$e.rotation.origin[1]; $oz=[double]$e.rotation.origin[2]
+      $c=[Math]::Cos($a); $s=[Math]::Sin($a)
+      foreach($px in @($x1,$x2)){ foreach($py in @($y1,$y2)){ foreach($pz in @($z1,$z2)){
+        $dx=$px-$ox; $dy=$py-$oy; $dz=$pz-$oz
+        if($ax -eq 'x'){ $ys += $oy + ($dy*$c - $dz*$s) }
+        elseif($ax -eq 'z'){ $ys += $oy + ($dx*$s + $dy*$c) }
+        else { $ys += $py }
+      }}}
+    } else {
+      $ys=@($y1,$y2)
+    }
+    foreach($v in $ys){ if($null -eq $min -or $v -lt $min){ $min=$v } }
+  }
+  if($null -eq $min){ return 0.0 }
+  return [Math]::Round($min,3)
+}
+
+$bs=New-Object Text.StringBuilder
+[void]$bs.AppendLine('# 이 파일은 자동으로 만들어진다. 직접 고치지 말 것.')
+[void]$bs.AppendLine('# 치장마다 모양의 아래 끝이 어디인지 적어 둔 표 (한 칸 = 16).')
+[void]$bs.AppendLine('# 치장 뽑기 기계 위에서 돌아가는 높이를 맞추는 데 쓴다.')
+[void]$bs.AppendLine('bottoms:')
+$bn=0
+foreach($i in $items){
+  $p=$i.model -split ':'
+  $mf="$rootDir\$($p[0])\models\$($p[1]).json"
+  if(-not (Test-Path $mf)){ continue }
+  [void]$bs.AppendLine("  $($i.key): $(Model-Bottom $mf)")
+  $bn++
+}
+New-Item -ItemType Directory -Force -Path "$srv\plugins\TagGame" | Out-Null
+[IO.File]::WriteAllText("$srv\plugins\TagGame\cosmetic-bounds.yml",$bs.ToString(),(New-Object Text.UTF8Encoding($false)))
+Write-Host ("치장 높이 표 {0}개 만듦" -f $bn)

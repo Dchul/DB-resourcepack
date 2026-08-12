@@ -10,13 +10,12 @@
        generic_54_frame.png … 바깥 테두리와 판. 위쪽에 26칸만큼 여백을 두고 그려져 있다.
      두 장을 26칸만큼 맞춰 겹쳐서 한 장으로 만들어 넣는다.
 
-  2) 치장 창 네 장(첫 화면·모자·등·왼손)은 겹쳐 그리는 그림이라
-     글자 하나에 그림 한 장을 담는 방식으로 넣는다. 창 제목에 그 글자를 적으면
-     창 위에 그림이 그려진다. 위로 26칸 올려 붙도록 값(39)을 맞춰 두었다.
+  2) 창 그림들(치장 네 장 · 도구 치장 여섯 장 · 뽑기 미리보기)은 겹쳐 그리는
+     그림이라 글자 하나에 그림 한 장을 담는 방식으로 넣는다. 창 제목에 그 글자를
+     적으면 창 위에 그림이 그려진다. 위로 26칸 올려 붙도록 값(39)을 맞춰 두었다.
 
-     뽑기 미리보기 창 그림은 따로 그리지 않고, 모자 창 그림에서 위쪽 단추 줄만
-     지워서 그 자리에 만든다 (칸 자리와 화살표는 그대로 쓴다). 지운 자리에는
-     창 제목 글자가 들어간다.
+     뽑기 미리보기 창은 창 이름까지 그림에 그려져 있다. 위쪽 보라색 띠는
+     "여기는 비워 둔다"는 표시라 넣기 전에 지운다.
 
   3) 치장 창의 단추들은 그림에 이미 그려져 있으므로, 그 자리에 놓는 물건은
      보이지 않아야 한다. 아무것도 안 보이는 물건 모양을 하나 만들어 넣는다.
@@ -56,16 +55,20 @@ try {
     $out.Save($merged, [System.Drawing.Imaging.ImageFormat]::Png)
     $out.Dispose(); $base.Dispose(); $frame.Dispose()
 
-    # ── 2) 뽑기 미리보기 창 그림 (모자 창에서 단추 줄만 지운 것) ──
-    #    지우는 자리: 테두리 안쪽 가로 3~172, 세로 41~60 (첫 칸 줄이 있던 자리)
-    $hat  = [System.Drawing.Bitmap]::FromFile((Join-Path $Gui 'cos_hat.png'))
-    $prev = New-Object System.Drawing.Bitmap($hat)
-    $hat.Dispose()
-    $panel = New-Object System.Drawing.SolidBrush([System.Drawing.Color]::FromArgb(255, 0xB9, 0xBC, 0xC4))
-    $g2 = [System.Drawing.Graphics]::FromImage($prev)
-    $g2.CompositingMode = 'SourceCopy'
-    $g2.FillRectangle($panel, 3, 41, 170, 20)
-    $g2.Dispose(); $panel.Dispose()
+    # ── 2) 뽑기 미리보기 창 그림 ─────────────────────────────────
+    #    창 이름까지 그림에 그려져 있다. 위쪽 보라색 띠는 "여기는 비워 둔다"는
+    #    표시일 뿐이라 그대로 두면 창 위에 보라색 막대가 얹히므로 지운다.
+    $prev = New-Object System.Drawing.Bitmap(
+            [System.Drawing.Bitmap]::FromFile((Join-Path $Gui 'gacha_preview.png')))
+    for ($y = 0; $y -lt $prev.Height; $y++) {
+        for ($x = 0; $x -lt $prev.Width; $x++) {
+            $c = $prev.GetPixel($x, $y)
+            if ($c.A -gt 0 -and $c.B -gt 120 -and $c.R -gt 60 -and
+                $c.G -lt ($c.R - 10) -and $c.G -lt ($c.B - 60)) {
+                $prev.SetPixel($x, $y, [System.Drawing.Color]::FromArgb(0, 0, 0, 0))
+            }
+        }
+    }
     $previewPath = Join-Path $tmp 'gacha_preview.png'
     $prev.Save($previewPath, [System.Drawing.Imaging.ImageFormat]::Png)
     $prev.Dispose()
@@ -97,7 +100,8 @@ try {
     try {
         Put-File 'assets/minecraft/textures/gui/container/generic_54.png' $merged
 
-        foreach ($n in 'cos_home','cos_hat','cos_back','cos_hand') {
+        foreach ($n in 'cos_home','cos_hat','cos_back','cos_hand',
+                       'tool_home','tool_axe','tool_hoe','tool_pickaxe','tool_rod','tool_sword') {
             Put-File "assets/taggame/textures/gui/$n.png" (Join-Path $Gui "$n.png")
         }
         Put-File 'assets/taggame/textures/gui/gacha_preview.png' $previewPath
@@ -108,6 +112,7 @@ try {
         #   e082 : 다시 제목 글자가 원래 시작하던 자리로 (그림 뒤에 글자를 적을 때)
         #   e090~e093 : 첫 화면 / 모자 / 등 / 왼손
         #   e094 : 뽑기 미리보기
+        #   e095~e09a : 도구 치장 — 첫 화면 / 도끼 / 괭이 / 곡괭이 / 낚싯대 / 검
         $guiFont = @"
 {
   "providers": [
@@ -116,7 +121,13 @@ try {
     { "type": "bitmap", "file": "taggame:gui/cos_hat.png",       "height": 256, "ascent": 39, "chars": ["$([char]0xE091)"] },
     { "type": "bitmap", "file": "taggame:gui/cos_back.png",      "height": 256, "ascent": 39, "chars": ["$([char]0xE092)"] },
     { "type": "bitmap", "file": "taggame:gui/cos_hand.png",      "height": 256, "ascent": 39, "chars": ["$([char]0xE093)"] },
-    { "type": "bitmap", "file": "taggame:gui/gacha_preview.png", "height": 256, "ascent": 39, "chars": ["$([char]0xE094)"] }
+    { "type": "bitmap", "file": "taggame:gui/gacha_preview.png", "height": 256, "ascent": 39, "chars": ["$([char]0xE094)"] },
+    { "type": "bitmap", "file": "taggame:gui/tool_home.png",     "height": 256, "ascent": 39, "chars": ["$([char]0xE095)"] },
+    { "type": "bitmap", "file": "taggame:gui/tool_axe.png",      "height": 256, "ascent": 39, "chars": ["$([char]0xE096)"] },
+    { "type": "bitmap", "file": "taggame:gui/tool_hoe.png",      "height": 256, "ascent": 39, "chars": ["$([char]0xE097)"] },
+    { "type": "bitmap", "file": "taggame:gui/tool_pickaxe.png",  "height": 256, "ascent": 39, "chars": ["$([char]0xE098)"] },
+    { "type": "bitmap", "file": "taggame:gui/tool_rod.png",      "height": 256, "ascent": 39, "chars": ["$([char]0xE099)"] },
+    { "type": "bitmap", "file": "taggame:gui/tool_sword.png",    "height": 256, "ascent": 39, "chars": ["$([char]0xE09A)"] }
   ]
 }
 "@
