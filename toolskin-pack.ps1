@@ -27,7 +27,7 @@ $Zip    = Join-Path $Root 'DB.zip'
 $Src    = Join-Path $Root 'toolskin'
 $List   = Join-Path $Root 'toolskin-items.yml'
 $NS     = 'toolskin'
-$Server = 'C:\Users\dredr\Documents\ServerEngine\servers\server_890160838'
+$Server = 'C:\Users\dredr\OneDrive\문서\ServerEngine\servers\server_890160838'
 
 if (-not (Test-Path $Zip))  { throw "DB.zip이 없습니다: $Zip" }
 if (-not (Test-Path $Src))  { throw "toolskin 폴더가 없습니다: $Src" }
