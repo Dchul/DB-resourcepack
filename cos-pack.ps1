@@ -66,7 +66,47 @@ function Lift-Head([string]$json, [double]$amount) {
     return $json.Remove($m.Index, $m.Length).Insert($m.Index, $newHead)
 }
 
-$folders = Get-ChildItem -Path $Root -Directory | Where-Object { $_.Name -match '^cos\d+$' }
+$folders = @(Get-ChildItem -Path $Root -Directory | Where-Object { $_.Name -match '^cos\d+$' })
+
+# ── 폴더로 안 남아 있는 묶음은 RR.zip 안에서 그대로 꺼내 쓴다 ──
+# RR.zip 에 assets/cos260523 처럼 같은 이름 그대로 들어 있다. 다만 RR.zip 쪽에는
+# 예전에 골라내고 버린 것까지 들어 있으므로, cos-manifest.txt 에 적힌 것만 꺼낸다.
+$Temp = $null
+$rrPath = Join-Path $Root 'RR.zip'
+$manifest = $null
+$manifestFile = Join-Path $Root 'cos-manifest.txt'
+if (Test-Path $manifestFile) {
+    $manifest = New-Object 'System.Collections.Generic.HashSet[string]'
+    foreach ($line in [IO.File]::ReadAllLines($manifestFile, [Text.Encoding]::UTF8)) {
+        $t = $line.Trim()
+        if ($t) { [void]$manifest.Add($t) }
+    }
+}
+if (Test-Path $rrPath) {
+    $have = @($folders | ForEach-Object { $_.Name })
+    $rr = [System.IO.Compression.ZipFile]::OpenRead($rrPath)
+    try {
+        $wanted = @($rr.Entries |
+            ForEach-Object { if ($_.FullName -match '^assets/(cos\d+)/') { $Matches[1] } } |
+            Sort-Object -Unique | Where-Object { $have -notcontains $_ })
+        if ($wanted.Count -gt 0) {
+            $Temp = Join-Path ([System.IO.Path]::GetTempPath()) ('cospack_' + [Guid]::NewGuid().ToString('N'))
+            foreach ($e in $rr.Entries) {
+                if (-not $e.Name) { continue }
+                if ($e.FullName -match '^assets/(cos\d+)/(.+)$' -and $wanted -contains $Matches[1]) {
+                    if ($manifest -and -not $manifest.Contains($Matches[1] + '/' + $Matches[2])) { continue }
+                    $dest = Join-Path $Temp ($Matches[1] + '\' + $Matches[2].Replace('/', '\'))
+                    $dir = Split-Path $dest -Parent
+                    if (-not (Test-Path $dir)) { New-Item -ItemType Directory -Path $dir -Force | Out-Null }
+                    [System.IO.Compression.ZipFileExtensions]::ExtractToFile($e, $dest, $true)
+                }
+            }
+            $folders += @(Get-ChildItem -Path $Temp -Directory)
+            Write-Host ('RR.zip 에서 꺼내 쓰는 묶음: ' + ($wanted -join ', ')) -ForegroundColor DarkGray
+        }
+    } finally { $rr.Dispose() }
+}
+
 if ($folders.Count -eq 0) { Write-Host 'cos 폴더가 없습니다.'; exit 0 }
 
 $archive = [System.IO.Compression.ZipFile]::Open($Zip, 'Update')
@@ -132,6 +172,7 @@ try {
     }
 } finally {
     $archive.Dispose()
+    if ($Temp -and (Test-Path $Temp)) { Remove-Item -LiteralPath $Temp -Recurse -Force }
 }
 
 $sha = (Get-FileHash -Algorithm SHA1 $Zip).Hash.ToLower()
