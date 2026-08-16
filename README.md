@@ -8,6 +8,23 @@
 | `DB_font_scale2.zip` | `/글꼴 2` — GUI 크기 2용 글꼴 덧씌우기 | https://raw.githubusercontent.com/Dchul/DB-resourcepack/main/DB_font_scale2.zip |
 | `DB_font_scale4.zip` | `/글꼴 4` — GUI 크기 4용 글꼴 덧씌우기 | https://raw.githubusercontent.com/Dchul/DB-resourcepack/main/DB_font_scale4.zip |
 
+## 글꼴
+
+| 파일 | 하는 일 |
+|---|---|
+| `font-pack.ps1` | 글꼴 설정 파일을 만들어 `DB.zip`과 GUI 크기별 덧씌우기 팩 두 개에 넣는다 (팩 두 개는 통째로 새로 만든다) |
+
+같은 글꼴을 세 벌씩 굽는다. 마인크래프트가 화면 가운데 큰 글씨를 확대해 그리기 때문이다.
+
+| 이름 | 쓰이는 곳 | 해상도 |
+|---|---|---|
+| `minecraft:default` / `taggame:bold` | 본문·채팅·창 글씨 | 1배 |
+| `taggame:mid` / `taggame:mid_bold` | 화면 가운데 부제 | 2배 |
+| `taggame:big` / `taggame:big_bold` | 화면 가운데 타이틀 | 4배 |
+
+꼬리잡기 플러그인이 타이틀·부제 글에 `mid`·`big`을 지정해 내보낸다. 글꼴 이름은 세 팩이
+모두 같고 안에 든 해상도만 다르므로, 사람마다 다른 팩을 써도 플러그인은 신경 쓸 게 없다.
+
 ## 치장(HMCCosmetics)
 
 | 파일 | 하는 일 |
