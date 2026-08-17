@@ -92,7 +92,8 @@ try {
         Put-File 'assets/minecraft/textures/gui/container/generic_54.png' $merged
 
         foreach ($n in 'cos_home','cos_hat','cos_back','cos_hand',
-                       'tool_home','tool_axe','tool_hoe','tool_pickaxe','tool_rod','tool_sword') {
+                       'tool_home','tool_axe','tool_hoe','tool_pickaxe','tool_rod','tool_sword',
+                       'pet_list') {
             Put-File "assets/taggame/textures/gui/$n.png" (Join-Path $Gui "$n.png")
         }
         Put-File 'assets/taggame/textures/gui/gacha_preview.png'      $previewPaths['gacha_preview']
@@ -106,6 +107,7 @@ try {
         #   e094 : 뽑기 미리보기 (펫·칭호·치장)
         #   e095~e09a : 도구 치장 — 첫 화면 / 도끼 / 괭이 / 곡괭이 / 낚싯대 / 검
         #   e09b : 도구 치장 뽑기 미리보기 (위쪽에 갈래 단추가 있다)
+        #   e09c : 펫 목록 (칸 36개 + 아래 좌우 화살표)
         $guiFont = @"
 {
   "providers": [
@@ -121,7 +123,8 @@ try {
     { "type": "bitmap", "file": "taggame:gui/tool_pickaxe.png",  "height": 256, "ascent": 39, "chars": ["$([char]0xE098)"] },
     { "type": "bitmap", "file": "taggame:gui/tool_rod.png",      "height": 256, "ascent": 39, "chars": ["$([char]0xE099)"] },
     { "type": "bitmap", "file": "taggame:gui/tool_sword.png",    "height": 256, "ascent": 39, "chars": ["$([char]0xE09A)"] },
-    { "type": "bitmap", "file": "taggame:gui/gacha_preview_tool.png", "height": 256, "ascent": 39, "chars": ["$([char]0xE09B)"] }
+    { "type": "bitmap", "file": "taggame:gui/gacha_preview_tool.png", "height": 256, "ascent": 39, "chars": ["$([char]0xE09B)"] },
+    { "type": "bitmap", "file": "taggame:gui/pet_list.png",      "height": 256, "ascent": 39, "chars": ["$([char]0xE09C)"] }
   ]
 }
 "@
