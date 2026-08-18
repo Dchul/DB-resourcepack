@@ -387,7 +387,7 @@
     색변경: 예
   cos_christmas_2_elf_staff:
     이름: "엘프 지팡이"
-    부위: 무기
+    부위: 손
     모양: "cos260818:christmas_2_elf_staff"
     색변경: 예
   cos_christmas_2_festive_messenger_bag:
@@ -799,7 +799,7 @@
     모양: "cos260818:summer_variety_hats_innertube_hat"
   cos_summer_variety_hats_seagull_beak:
     이름: "갈매기 부리"
-    부위: 손
+    부위: 머리
     모양: "cos260818:summer_variety_hats_seagull_beak"
   cos_summer_variety_hats_shade_cap:
     이름: "선글라스 모자"
