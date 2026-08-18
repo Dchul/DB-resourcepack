@@ -39,12 +39,13 @@ $cur = $null
 foreach ($line in ([IO.File]::ReadAllText($List, [Text.Encoding]::UTF8) -split "`r?`n")) {
     if     ($line -match '^\s{2}([A-Za-z0-9_]+):\s*$') {
         if ($cur) { $skins += $cur }
-        $cur = [ordered]@{ id = $Matches[1]; name = $null; kind = $null; model = $null; cast = $null }
+        $cur = [ordered]@{ id = $Matches[1]; name = $null; kind = $null; model = $null; cast = $null; pull = $null }
     }
     elseif ($line -match '^\s+이름:\s*"(.*)"')      { if ($cur) { $cur.name  = $Matches[1] } }
     elseif ($line -match '^\s+종류:\s*(\S+)')        { if ($cur) { $cur.kind  = $Matches[1] } }
     elseif ($line -match '^\s+모양:\s*"(.*)"')      { if ($cur) { $cur.model = $Matches[1] } }
     elseif ($line -match '^\s+던진모양:\s*"(.*)"')  { if ($cur) { $cur.cast  = $Matches[1] } }
+    elseif ($line -match '^\s+당김모양:\s*"(.*)"')  { if ($cur) { $cur.pull  = @($Matches[1] -split '\s+') } }
 }
 if ($cur) { $skins += $cur }
 $skins = @($skins | Where-Object { $_.name -and $_.model })
@@ -128,7 +129,28 @@ try {
     }
 
     foreach ($s in $skins) {
-        if ($s.cast) {
+        if ($s.pull -and $s.pull.Count -ge 3) {
+            # 활 — 시위를 당기는 동안 세 단계로 모양이 바뀐다
+            $body = @"
+{
+  "model": {
+    "type": "minecraft:condition",
+    "property": "minecraft:using_item",
+    "on_false": { "type": "minecraft:model", "model": "$NS`:$($s.model)" },
+    "on_true": {
+      "type": "minecraft:range_dispatch",
+      "property": "minecraft:use_duration",
+      "scale": 0.05,
+      "fallback": { "type": "minecraft:model", "model": "$NS`:$($s.pull[0])" },
+      "entries": [
+        { "threshold": 0.65, "model": { "type": "minecraft:model", "model": "$NS`:$($s.pull[1])" } },
+        { "threshold": 0.9,  "model": { "type": "minecraft:model", "model": "$NS`:$($s.pull[2])" } }
+      ]
+    }
+  }
+}
+"@
+        } elseif ($s.cast) {
             # 낚싯대 — 찌를 던진 동안에는 다른 모양으로 바뀐다
             $body = @"
 {

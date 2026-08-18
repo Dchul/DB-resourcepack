@@ -131,6 +131,19 @@ try {
     foreach ($f in $folders) {
         $ns = $f.Name
 
+        # 모양이 하나도 없는 묶음은 손대지 않는다.
+        # (RR.zip 과 cos-manifest.txt 가 어긋나 아무것도 못 꺼낸 경우가 있는데,
+        #  그대로 두면 이미 DB.zip 에 잘 들어가 있던 것까지 지워 버린다.)
+        $modelDirCheck = Join-Path $f.FullName 'models'
+        $modelCountCheck = 0
+        if (Test-Path $modelDirCheck) {
+            $modelCountCheck = @(Get-ChildItem -Path $modelDirCheck -Filter *.json -File).Count
+        }
+        if ($modelCountCheck -eq 0) {
+            Write-Host "$ns : 모양이 없어 건너뜁니다 (DB.zip 안의 것은 그대로 둡니다)" -ForegroundColor Yellow
+            continue
+        }
+
         # 예전에 잘못 들어간 것이 있으면 통째로 지우고 새로 넣는다
         foreach ($e in @($archive.Entries | Where-Object { $_.FullName -like "assets/$ns/*" })) {
             $e.Delete()

@@ -9,6 +9,8 @@
 #    부위  : 머리 / 상체 / 손 / 풍선  중 하나
 #    모양  : 리소스팩 안의 모양 이름 (폴더이름:파일이름)
 #    그릇  : 생략 가능. 모양을 입힐 바탕 아이템 (기본값 가죽 말갑옷)
+#    색변경: 생략 가능. '예' 라고 적으면 게임 안에서 색을 골라 바꿀 수 있다.
+#            (모양에 색 바뀌는 부분이 있는 치장에만 뜻이 있다)
 #
 #  몸의 어디에 놓일지는 리소스팩의 모양 파일이 갖고 있으므로 여기에 위치 값은 없다.
 #
@@ -235,3 +237,656 @@
     부위: 손
     모양: "cos260714:ccfd8595-3c6d-4e58-b285-f8330d2c489a"
 
+  # ── 2026-08-18 에 늘린 것들 ─────────────────────────────
+
+  # ── adventurer ──
+  cos_adventurer_adventurer_backpack:
+    이름: "숲속 탐험가 배냥"
+    부위: 상체
+    모양: "cos260818:adventurer_adventurer_backpack"
+    색변경: 예
+  cos_adventurer_adventurer_hat:
+    이름: "숲속 탐험가 모자"
+    부위: 머리
+    모양: "cos260818:adventurer_adventurer_hat"
+    색변경: 예
+  cos_adventurer_adventurer_lantern:
+    이름: "숲속 탐험가 랜턴"
+    부위: 손
+    모양: "cos260818:adventurer_adventurer_lantern"
+    색변경: 예
+
+  # ── bokjumoni ──
+  cos_bokjumoni_backpack:
+    이름: "복주머니 가방"
+    부위: 상체
+    모양: "cos260818:bokjumoni_backpack"
+    색변경: 예
+  cos_bokjumoni_hat:
+    이름: "복주머니 머리띠"
+    부위: 머리
+    모양: "cos260818:bokjumoni_hat"
+    색변경: 예
+
+  # ── bunny ──
+  cos_bunny_bunny_headband:
+    이름: "깡총 토끼 머리띠"
+    부위: 머리
+    모양: "cos260818:bunny_bunny_headband"
+    색변경: 예
+  cos_bunny_bunny_pet:
+    이름: "깡총 토끼"
+    부위: 상체
+    모양: "cos260818:bunny_bunny_pet"
+    색변경: 예
+  cos_bunny_giant_carrot_prop:
+    이름: "깡총 토끼 거대 당근"
+    부위: 손
+    모양: "cos260818:bunny_giant_carrot_prop"
+    색변경: 예
+
+  # ── butterfly_catcher ──
+  cos_butterfly_catcher_butterfly_catcher_hat:
+    이름: "곤충 채집가 모자"
+    부위: 머리
+    모양: "cos260818:butterfly_catcher_butterfly_catcher_hat"
+    색변경: 예
+  cos_butterfly_catcher_butterfly_catcher_journal:
+    이름: "곤충 채집가 일지"
+    부위: 손
+    모양: "cos260818:butterfly_catcher_butterfly_catcher_journal"
+    색변경: 예
+  cos_butterfly_catcher_butterfly_catcher_magnifying_glass:
+    이름: "곤충 채집가 돋보기"
+    부위: 손
+    모양: "cos260818:butterfly_catcher_butterfly_catcher_magnifying_glass"
+    색변경: 예
+
+  # ── chick ──
+  cos_chick_easter_chick_beret:
+    이름: "병아리 삐약 베레모"
+    부위: 머리
+    모양: "cos260818:chick_easter_chick_beret"
+    색변경: 예
+  cos_chick_easter_chick_bouquet:
+    이름: "병아리 삐약 꽃다발"
+    부위: 손
+    모양: "cos260818:chick_easter_chick_bouquet"
+    색변경: 예
+  cos_chick_easter_chick_carrier:
+    이름: "병아리 삐약 캐리어"
+    부위: 상체
+    모양: "cos260818:chick_easter_chick_carrier"
+    색변경: 예
+
+  # ── christmas_1 ──
+  cos_christmas_1_festive_bell:
+    이름: "축제 종"
+    부위: 손
+    모양: "cos260818:christmas_1_festive_bell"
+    색변경: 예
+  cos_christmas_1_festive_reindeer_antlers:
+    이름: "축제 순록 뿔"
+    부위: 머리
+    모양: "cos260818:christmas_1_festive_reindeer_antlers"
+    색변경: 예
+  cos_christmas_1_festive_robe:
+    이름: "축제 망토"
+    부위: 상체
+    모양: "cos260818:christmas_1_festive_robe"
+    색변경: 예
+  cos_christmas_1_nutcracker_baton:
+    이름: "호두까기 인형 지휘봉"
+    부위: 손
+    모양: "cos260818:christmas_1_nutcracker_baton"
+    색변경: 예
+  cos_christmas_1_nutcracker_drum:
+    이름: "호두까기 인형 드럼"
+    부위: 상체
+    모양: "cos260818:christmas_1_nutcracker_drum"
+    색변경: 예
+  cos_christmas_1_nutcracker_hat:
+    이름: "호두까기 인형 모자"
+    부위: 머리
+    모양: "cos260818:christmas_1_nutcracker_hat"
+    색변경: 예
+  cos_christmas_1_winter_candy_cane_prop:
+    이름: "겨울 사탕 지팡이"
+    부위: 손
+    모양: "cos260818:christmas_1_winter_candy_cane_prop"
+    색변경: 예
+  cos_christmas_1_winter_knitted_hat:
+    이름: "겨울 털 모자"
+    부위: 머리
+    모양: "cos260818:christmas_1_winter_knitted_hat"
+    색변경: 예
+  cos_christmas_1_winter_scarf:
+    이름: "겨울 목도리"
+    부위: 상체
+    모양: "cos260818:christmas_1_winter_scarf"
+    색변경: 예
+
+  # ── christmas_2 ──
+  cos_christmas_2_elf_hat:
+    이름: "엘프 모자"
+    부위: 머리
+    모양: "cos260818:christmas_2_elf_hat"
+    색변경: 예
+  cos_christmas_2_elf_ribbon_bow:
+    이름: "엘프 리본"
+    부위: 상체
+    모양: "cos260818:christmas_2_elf_ribbon_bow"
+    색변경: 예
+  cos_christmas_2_elf_staff:
+    이름: "엘프 지팡이"
+    부위: 무기
+    모양: "cos260818:christmas_2_elf_staff"
+    색변경: 예
+  cos_christmas_2_festive_messenger_bag:
+    이름: "축제 배달부 가방"
+    부위: 손
+    모양: "cos260818:christmas_2_festive_messenger_bag"
+    색변경: 예
+  cos_christmas_2_festive_messenger_hat:
+    이름: "축제 배달부 모자"
+    부위: 머리
+    모양: "cos260818:christmas_2_festive_messenger_hat"
+    색변경: 예
+  cos_christmas_2_festive_popper:
+    이름: "축제 폭죽"
+    부위: 손
+    모양: "cos260818:christmas_2_festive_popper"
+    색변경: 예
+  cos_christmas_2_gingerbread_beret:
+    이름: "진저브레드 모자"
+    부위: 머리
+    모양: "cos260818:christmas_2_gingerbread_beret"
+    색변경: 예
+  cos_christmas_2_gingerbread_man_backpack:
+    이름: "진저브레드 배낭"
+    부위: 상체
+    모양: "cos260818:christmas_2_gingerbread_man_backpack"
+    색변경: 예
+  cos_christmas_2_gingerbread_staff:
+    이름: "진저브레드 지팡이"
+    부위: 손
+    모양: "cos260818:christmas_2_gingerbread_staff"
+    색변경: 예
+
+  # ── creeper ──
+  cos_creeper_creeper_backpack:
+    이름: "크리퍼 가방"
+    부위: 상체
+    모양: "cos260818:creeper_creeper_backpack"
+    색변경: 예
+  cos_creeper_creeper_baseball_hat:
+    이름: "크리퍼 모자"
+    부위: 머리
+    모양: "cos260818:creeper_creeper_baseball_hat"
+    색변경: 예
+
+  # ── cyberpunk_gamer ──
+  cos_cyberpunk_gamer_arena_challenger_arm:
+    이름: "옵시디언 코어 암"
+    부위: 손
+    모양: "cos260818:cyberpunk_gamer_arena_challenger_arm"
+    색변경: 예
+  cos_cyberpunk_gamer_arena_challenger_backpack:
+    이름: "옵시디언 코어 백팩"
+    부위: 상체
+    모양: "cos260818:cyberpunk_gamer_arena_challenger_backpack"
+    색변경: 예
+  cos_cyberpunk_gamer_arena_challenger_visor:
+    이름: "옵시디언 코어 바이저"
+    부위: 머리
+    모양: "cos260818:cyberpunk_gamer_arena_challenger_visor"
+    색변경: 예
+  cos_cyberpunk_gamer_game_expert_blaster:
+    이름: "네온 레이더 건"
+    부위: 손
+    모양: "cos260818:cyberpunk_gamer_game_expert_blaster"
+    색변경: 예
+  cos_cyberpunk_gamer_game_expert_headphones:
+    이름: "네온 레이더 헤드폰"
+    부위: 머리
+    모양: "cos260818:cyberpunk_gamer_game_expert_headphones"
+    색변경: 예
+  cos_cyberpunk_gamer_hyperspace_warrior_helmet:
+    이름: "하이퍼 제니스 헬멧"
+    부위: 머리
+    모양: "cos260818:cyberpunk_gamer_hyperspace_warrior_helmet"
+    색변경: 예
+  cos_cyberpunk_gamer_hyperspace_warrior_jetpack:
+    이름: "하이퍼 제니스 제트팩"
+    부위: 상체
+    모양: "cos260818:cyberpunk_gamer_hyperspace_warrior_jetpack"
+    색변경: 예
+  cos_cyberpunk_gamer_hyperspace_warrior_propeller:
+    이름: "하이퍼 제니스 프로펠러"
+    부위: 손
+    모양: "cos260818:cyberpunk_gamer_hyperspace_warrior_propeller"
+    색변경: 예
+
+  # ── easter ──
+  cos_easter_1:
+    이름: "바니 헤드폰"
+    부위: 머리
+    모양: "cos260818:easter_1"
+    색변경: 예
+  cos_easter_2:
+    이름: "버니 북"
+    부위: 손
+    모양: "cos260818:easter_2"
+    색변경: 예
+  cos_easter_3:
+    이름: "바니 인형"
+    부위: 상체
+    모양: "cos260818:easter_3"
+    색변경: 예
+  cos_easter_4:
+    이름: "바니 비니"
+    부위: 머리
+    모양: "cos260818:easter_4"
+    색변경: 예
+  cos_easter_5:
+    이름: "버니 지팡이"
+    부위: 손
+    모양: "cos260818:easter_5"
+    색변경: 예
+  cos_easter_6:
+    이름: "버니 날개"
+    부위: 상체
+    모양: "cos260818:easter_6"
+    색변경: 예
+
+  # ── female_hanbok ──
+  cos_female_hanbok_backpack:
+    이름: "공주마마 한복"
+    부위: 상체
+    모양: "cos260818:female_hanbok_backpack"
+    색변경: 예
+  cos_female_hanbok_hat:
+    이름: "공주마마 머리띠"
+    부위: 머리
+    모양: "cos260818:female_hanbok_hat"
+    색변경: 예
+  cos_female_hanbok_offhand:
+    이름: "공주마마 양산"
+    부위: 손
+    모양: "cos260818:female_hanbok_offhand"
+    색변경: 예
+
+  # ── glasses ──
+  cos_glasses_3d_glasses:
+    이름: "3D 안경"
+    부위: 머리
+    모양: "cos260818:glasses_3d_glasses"
+  cos_glasses_black_glasses:
+    이름: "검정 안경"
+    부위: 머리
+    모양: "cos260818:glasses_black_glasses"
+  cos_glasses_black_sunglasses:
+    이름: "검정 선글라스"
+    부위: 머리
+    모양: "cos260818:glasses_black_sunglasses"
+  cos_glasses_brown_glasses:
+    이름: "갈색 안경"
+    부위: 머리
+    모양: "cos260818:glasses_brown_glasses"
+  cos_glasses_deal_with_it_sunglasses:
+    이름: "픽셀 선글라스"
+    부위: 머리
+    모양: "cos260818:glasses_deal_with_it_sunglasses"
+  cos_glasses_neon_sunglasses:
+    이름: "네온 선글라스"
+    부위: 머리
+    모양: "cos260818:glasses_neon_sunglasses"
+  cos_glasses_rainbow_sunglasses:
+    이름: "무지개 선글라스"
+    부위: 머리
+    모양: "cos260818:glasses_rainbow_sunglasses"
+  cos_glasses_tint_sunglasses:
+    이름: "염색 선글라스"
+    부위: 머리
+    모양: "cos260818:glasses_tint_sunglasses"
+    색변경: 예
+  cos_glasses_xray_glasses:
+    이름: "틴팅 선글라스"
+    부위: 머리
+    모양: "cos260818:glasses_xray_glasses"
+
+  # ── grim_reaper ──
+  cos_grim_reaper_backpack:
+    이름: "저승사자 두루마기"
+    부위: 상체
+    모양: "cos260818:grim_reaper_backpack"
+    색변경: 예
+  cos_grim_reaper_hat:
+    이름: "저승사자 모자"
+    부위: 머리
+    모양: "cos260818:grim_reaper_hat"
+    색변경: 예
+  cos_grim_reaper_offhand:
+    이름: "저승사자 부채"
+    부위: 손
+    모양: "cos260818:grim_reaper_offhand"
+    색변경: 예
+
+  # ── gumiho ──
+  cos_gumiho_backpack:
+    이름: "구미호 꼬리"
+    부위: 상체
+    모양: "cos260818:gumiho_backpack"
+    색변경: 예
+  cos_gumiho_hat:
+    이름: "구미호 머리띠"
+    부위: 머리
+    모양: "cos260818:gumiho_hat"
+    색변경: 예
+  cos_gumiho_offhand:
+    이름: "구미호 여우불"
+    부위: 손
+    모양: "cos260818:gumiho_offhand"
+    색변경: 예
+
+  # ── halloween_1 ──
+  cos_halloween_1_candy_pumpkin_backpack:
+    이름: "사탕 배낭"
+    부위: 상체
+    모양: "cos260818:halloween_1_candy_pumpkin_backpack"
+    색변경: 예
+  cos_halloween_1_candy_pumpkin_beret:
+    이름: "사탕 베레모"
+    부위: 머리
+    모양: "cos260818:halloween_1_candy_pumpkin_beret"
+    색변경: 예
+  cos_halloween_1_halloween_witch_cauldron:
+    이름: "마녀의 가마솥"
+    부위: 손
+    모양: "cos260818:halloween_1_halloween_witch_cauldron"
+    색변경: 예
+  cos_halloween_1_spooky_pumpkin_hat:
+    이름: "펌킨 모자"
+    부위: 머리
+    모양: "cos260818:halloween_1_spooky_pumpkin_hat"
+    색변경: 예
+  cos_halloween_1_spooky_pumpkin_wings:
+    이름: "펌킨 날개"
+    부위: 상체
+    모양: "cos260818:halloween_1_spooky_pumpkin_wings"
+    색변경: 예
+
+  # ── icecream ──
+  cos_icecream_icecream_hat:
+    이름: "크림소다 모자"
+    부위: 머리
+    모양: "cos260818:icecream_icecream_hat"
+    색변경: 예
+
+  # ── lanshan_cos_axolotl ──
+  cos_lanshan_cos_axolotl_axolotl_hat:
+    이름: "아홀로틀 모자"
+    부위: 머리
+    모양: "cos260818:lanshan_cos_axolotl_axolotl_hat"
+    색변경: 예
+  cos_lanshan_cos_axolotl_axolotl_tank:
+    이름: "아홀로틀 수조"
+    부위: 상체
+    모양: "cos260818:lanshan_cos_axolotl_axolotl_tank"
+    색변경: 예
+  cos_lanshan_cos_axolotl_axolotl_water_gun:
+    이름: "아홀로틀 물총"
+    부위: 손
+    모양: "cos260818:lanshan_cos_axolotl_axolotl_water_gun"
+    색변경: 예
+
+  # ── lanshan_cos_crab ──
+  cos_lanshan_cos_crab_crab_claw:
+    이름: "바닷가재 집개"
+    부위: 손
+    모양: "cos260818:lanshan_cos_crab_crab_claw"
+    색변경: 예
+  cos_lanshan_cos_crab_crab_hat:
+    이름: "바닷가재 모자"
+    부위: 머리
+    모양: "cos260818:lanshan_cos_crab_crab_hat"
+    색변경: 예
+  cos_lanshan_cos_crab_seashell:
+    이름: "바닷가재 껍데기"
+    부위: 상체
+    모양: "cos260818:lanshan_cos_crab_seashell"
+    색변경: 예
+
+  # ── male_hanbok ──
+  cos_male_hanbok_backpack:
+    이름: "도련님 두루마기"
+    부위: 상체
+    모양: "cos260818:male_hanbok_backpack"
+    색변경: 예
+  cos_male_hanbok_hat:
+    이름: "도련님 갓"
+    부위: 머리
+    모양: "cos260818:male_hanbok_hat"
+    색변경: 예
+  cos_male_hanbok_offhand:
+    이름: "도련님 연"
+    부위: 손
+    모양: "cos260818:male_hanbok_offhand"
+    색변경: 예
+
+  # ── new_year ──
+  cos_new_year_cake_hat:
+    이름: "2026 케이크 모자"
+    부위: 머리
+    모양: "cos260818:new_year_cake_hat"
+    색변경: 예
+
+  # ── pajamas_bear ──
+  cos_pajamas_bear_pajamas_bear_backpack_backpack_cosmetic_normal_2:
+    이름: "곰돌이 파자마 백팩"
+    부위: 상체
+    모양: "cos260818:pajamas_bear_pajamas_bear_backpack_backpack_cosmetic_normal_2"
+    색변경: 예
+  cos_pajamas_bear_pajamas_bear_glove_offhand:
+    이름: "곰돌이 파자마 장갑"
+    부위: 손
+    모양: "cos260818:pajamas_bear_pajamas_bear_glove_offhand"
+    색변경: 예
+  cos_pajamas_bear_pajamas_bear_hat_hat:
+    이름: "곰돌이 파자마 모자"
+    부위: 머리
+    모양: "cos260818:pajamas_bear_pajamas_bear_hat_hat"
+    색변경: 예
+
+  # ── pajamas_rabbit ──
+  cos_pajamas_rabbit_pajamas_rabbit_backpack_backpack_cosmetic_normal_2:
+    이름: "토끼 파자마 백팩"
+    부위: 상체
+    모양: "cos260818:pajamas_rabbit_pajamas_rabbit_backpack_backpack_cosmetic_normal_2"
+    색변경: 예
+  cos_pajamas_rabbit_pajamas_rabbit_glove_offhand:
+    이름: "토끼 파자마 장갑"
+    부위: 손
+    모양: "cos260818:pajamas_rabbit_pajamas_rabbit_glove_offhand"
+    색변경: 예
+  cos_pajamas_rabbit_pajamas_rabbit_hat_hat:
+    이름: "토끼 파자마 모자"
+    부위: 머리
+    모양: "cos260818:pajamas_rabbit_pajamas_rabbit_hat_hat"
+    색변경: 예
+
+  # ── pastel_spring ──
+  cos_pastel_spring_pastel_spring_bag:
+    이름: "피크닉 가방"
+    부위: 상체
+    모양: "cos260818:pastel_spring_pastel_spring_bag"
+    색변경: 예
+  cos_pastel_spring_pastel_spring_hat:
+    이름: "피크닉 모자"
+    부위: 머리
+    모양: "cos260818:pastel_spring_pastel_spring_hat"
+    색변경: 예
+
+  # ── spring_outing ──
+  cos_spring_outing_outing_backpack:
+    이름: "브이로거 가방"
+    부위: 상체
+    모양: "cos260818:spring_outing_outing_backpack"
+    색변경: 예
+  cos_spring_outing_outing_camera:
+    이름: "브이로거 카메라"
+    부위: 손
+    모양: "cos260818:spring_outing_outing_camera"
+    색변경: 예
+  cos_spring_outing_outing_headphones_cap:
+    이름: "브이로거 모자"
+    부위: 머리
+    모양: "cos260818:spring_outing_outing_headphones_cap"
+    색변경: 예
+  cos_spring_outing_outing_pinwheel:
+    이름: "꾸러기 바람개비"
+    부위: 손
+    모양: "cos260818:spring_outing_outing_pinwheel"
+    색변경: 예
+  cos_spring_outing_outing_propeller_hat:
+    이름: "꾸러기 프로펠러 모자"
+    부위: 머리
+    모양: "cos260818:spring_outing_outing_propeller_hat"
+    색변경: 예
+
+  # ── summer_variety_hats ──
+  cos_summer_variety_hats_cap:
+    이름: "빨간 볼캡"
+    부위: 머리
+    모양: "cos260818:summer_variety_hats_cap"
+  cos_summer_variety_hats_duck_cap:
+    이름: "오리 얼굴 모자"
+    부위: 머리
+    모양: "cos260818:summer_variety_hats_duck_cap"
+  cos_summer_variety_hats_funny_cap:
+    이름: "알록달록 볼캡"
+    부위: 머리
+    모양: "cos260818:summer_variety_hats_funny_cap"
+  cos_summer_variety_hats_innertube_hat:
+    이름: "튜브 모자"
+    부위: 머리
+    모양: "cos260818:summer_variety_hats_innertube_hat"
+  cos_summer_variety_hats_seagull_beak:
+    이름: "갈매기 부리"
+    부위: 손
+    모양: "cos260818:summer_variety_hats_seagull_beak"
+  cos_summer_variety_hats_shade_cap:
+    이름: "선글라스 모자"
+    부위: 머리
+    모양: "cos260818:summer_variety_hats_shade_cap"
+  cos_summer_variety_hats_square_sunglasses:
+    이름: "네모난 선글라스"
+    부위: 머리
+    모양: "cos260818:summer_variety_hats_square_sunglasses"
+  cos_summer_variety_hats_summer_visor:
+    이름: "파란 썬캡"
+    부위: 머리
+    모양: "cos260818:summer_variety_hats_summer_visor"
+  cos_summer_variety_hats_tropic_hat:
+    이름: "밀짚 모자"
+    부위: 머리
+    모양: "cos260818:summer_variety_hats_tropic_hat"
+  cos_summer_variety_hats_tropic_hat_with_glasses:
+    이름: "밀짚 선글라스 모자"
+    부위: 머리
+    모양: "cos260818:summer_variety_hats_tropic_hat_with_glasses"
+
+  # ── summercosmetics ──
+  cos_summercosmetics_bandana:
+    이름: "여름 반다나"
+    부위: 머리
+    모양: "cos260818:summercosmetics_bandana"
+  cos_summercosmetics_crabhat:
+    이름: "꽃개 모자"
+    부위: 머리
+    모양: "cos260818:summercosmetics_crabhat"
+  cos_summercosmetics_duckfloat:
+    이름: "오리 튜브 모자"
+    부위: 머리
+    모양: "cos260818:summercosmetics_duckfloat"
+  cos_summercosmetics_duckhat:
+    이름: "오리 얼굴 모자"
+    부위: 머리
+    모양: "cos260818:summercosmetics_duckhat"
+  cos_summercosmetics_headphone:
+    이름: "파란 헤드폰"
+    부위: 머리
+    모양: "cos260818:summercosmetics_headphone"
+  cos_summercosmetics_marinehat:
+    이름: "선원 모자"
+    부위: 머리
+    모양: "cos260818:summercosmetics_marinehat"
+  cos_summercosmetics_snorkelmask:
+    이름: "스노클링 고글"
+    부위: 머리
+    모양: "cos260818:summercosmetics_snorkelmask"
+  cos_summercosmetics_summerhat:
+    이름: "해변 모자"
+    부위: 머리
+    모양: "cos260818:summercosmetics_summerhat"
+  cos_summercosmetics_sunglasses:
+    이름: "타이니 선글라스"
+    부위: 머리
+    모양: "cos260818:summercosmetics_sunglasses"
+
+  # ── sunglasses_extra ──
+  cos_sunglasses_extra_alien_sunglasses:
+    이름: "외계인 선글라스"
+    부위: 머리
+    모양: "cos260818:sunglasses_extra_alien_sunglasses"
+  cos_sunglasses_extra_basic_sunglasses:
+    이름: "베이직 선글라스"
+    부위: 머리
+    모양: "cos260818:sunglasses_extra_basic_sunglasses"
+  cos_sunglasses_extra_cool_heart_sunglasses:
+    이름: "쿨 하트 선글라스"
+    부위: 머리
+    모양: "cos260818:sunglasses_extra_cool_heart_sunglasses"
+  cos_sunglasses_extra_navy_tint_sunglasses:
+    이름: "네이비 틴팅 선글라스"
+    부위: 머리
+    모양: "cos260818:sunglasses_extra_navy_tint_sunglasses"
+  cos_sunglasses_extra_orange_tint_sunglasses:
+    이름: "오렌지 틴팅 선글라스"
+    부위: 머리
+    모양: "cos260818:sunglasses_extra_orange_tint_sunglasses"
+  cos_sunglasses_extra_warm_heart_sunglasses:
+    이름: "웜 하트 선글라스"
+    부위: 머리
+    모양: "cos260818:sunglasses_extra_warm_heart_sunglasses"
+
+  # ── valentine_2 ──
+  cos_valentine_2_rose_top_hat:
+    이름: "테디 보이 모자"
+    부위: 머리
+    모양: "cos260818:valentine_2_rose_top_hat"
+    색변경: 예
+  cos_valentine_2_teddy_bear_box:
+    이름: "테디 보이 가방"
+    부위: 상체
+    모양: "cos260818:valentine_2_teddy_bear_box"
+    색변경: 예
+  cos_valentine_2_valentines_bear_hat:
+    이름: "테디베어 모자"
+    부위: 머리
+    모양: "cos260818:valentine_2_valentines_bear_hat"
+  cos_valentine_2_wedding_bouquet:
+    이름: "장미 부케"
+    부위: 손
+    모양: "cos260818:valentine_2_wedding_bouquet"
+    색변경: 예
+  cos_valentine_2_wedding_dress:
+    이름: "장미 드레스"
+    부위: 상체
+    모양: "cos260818:valentine_2_wedding_dress"
+    색변경: 예
+  cos_valentine_2_wedding_veil:
+    이름: "장미 베일"
+    부위: 머리
+    모양: "cos260818:valentine_2_wedding_veil"
+    색변경: 예

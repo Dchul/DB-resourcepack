@@ -13,12 +13,12 @@ $menuTitle=@{ hat='머리'; back='등·어깨'; hand='손'; balloon='풍선' }
 
 # ── 목록 읽기 ────────────────────────────────────────────────
 $items=@()
-$key=$null;$nm=$null;$bu=$null;$mo=$null;$gr=$null
+$key=$null;$nm=$null;$bu=$null;$mo=$null;$gr=$null;$dy=$false
 function Flush{
   if($script:key -and $script:mo){
-    $script:items+=[pscustomobject]@{ key=$script:key; name=$script:nm; part=$script:bu; model=$script:mo; base=$script:gr }
+    $script:items+=[pscustomobject]@{ key=$script:key; name=$script:nm; part=$script:bu; model=$script:mo; base=$script:gr; dye=$script:dy }
   }
-  $script:key=$null;$script:nm=$null;$script:bu=$null;$script:mo=$null;$script:gr=$null
+  $script:key=$null;$script:nm=$null;$script:bu=$null;$script:mo=$null;$script:gr=$null;$script:dy=$false
 }
 foreach($line in ([IO.File]::ReadAllText($src,[Text.Encoding]::UTF8) -split "`r?`n")){
   if($line -match '^\s{2}([A-Za-z0-9_]+):\s*$'){ Flush; $key=$Matches[1] }
@@ -26,6 +26,7 @@ foreach($line in ([IO.File]::ReadAllText($src,[Text.Encoding]::UTF8) -split "`r?
   elseif($line -match '^\s+부위:\s*(\S+)'){ $bu=$Matches[1] }
   elseif($line -match '^\s+모양:\s*"(.+)"'){ $mo=$Matches[1] }
   elseif($line -match '^\s+그릇:\s*(\S+)'){ $gr=$Matches[1] }
+  elseif($line -match '^\s+색변경:\s*(\S+)'){ $dy=($Matches[1] -eq '예') }
 }
 Flush
 
@@ -42,6 +43,7 @@ foreach($i in $items){
   [void]$sb.AppendLine("$($i.key):")
   [void]$sb.AppendLine("  slot: $slot")
   [void]$sb.AppendLine("  permission: `"hmccosmetics.cosmetic.$($i.key)`"")
+  if($i.dye){ [void]$sb.AppendLine("  dyeable: true") }
   [void]$sb.AppendLine("  item:")
   [void]$sb.AppendLine("    material: $base")
   [void]$sb.AppendLine("    model-id: `"$($i.model)`"")
