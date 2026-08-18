@@ -244,6 +244,7 @@
     이름: "숲속 탐험가 배냥"
     부위: 상체
     모양: "cos260818:adventurer_adventurer_backpack"
+    높이올림: 0
     색변경: 예
   cos_adventurer_adventurer_hat:
     이름: "숲속 탐험가 모자"
@@ -261,6 +262,7 @@
     이름: "복주머니 가방"
     부위: 상체
     모양: "cos260818:bokjumoni_backpack"
+    높이올림: 0
     색변경: 예
   cos_bokjumoni_hat:
     이름: "복주머니 머리띠"
@@ -278,6 +280,7 @@
     이름: "깡총 토끼"
     부위: 상체
     모양: "cos260818:bunny_bunny_pet"
+    높이올림: 0
     색변경: 예
   cos_bunny_giant_carrot_prop:
     이름: "깡총 토끼 거대 당근"
@@ -317,6 +320,7 @@
     이름: "병아리 삐약 캐리어"
     부위: 상체
     모양: "cos260818:chick_easter_chick_carrier"
+    높이올림: 0
     색변경: 예
 
   # ── christmas_1 ──
@@ -334,6 +338,7 @@
     이름: "축제 망토"
     부위: 상체
     모양: "cos260818:christmas_1_festive_robe"
+    높이올림: 0
     색변경: 예
   cos_christmas_1_nutcracker_baton:
     이름: "호두까기 인형 지휘봉"
@@ -344,6 +349,7 @@
     이름: "호두까기 인형 드럼"
     부위: 상체
     모양: "cos260818:christmas_1_nutcracker_drum"
+    높이올림: 0
     색변경: 예
   cos_christmas_1_nutcracker_hat:
     이름: "호두까기 인형 모자"
@@ -364,6 +370,7 @@
     이름: "겨울 목도리"
     부위: 상체
     모양: "cos260818:christmas_1_winter_scarf"
+    높이올림: 0
     색변경: 예
 
   # ── christmas_2 ──
@@ -376,6 +383,7 @@
     이름: "엘프 리본"
     부위: 상체
     모양: "cos260818:christmas_2_elf_ribbon_bow"
+    높이올림: 0
     색변경: 예
   cos_christmas_2_elf_staff:
     이름: "엘프 지팡이"
@@ -406,6 +414,7 @@
     이름: "진저브레드 배낭"
     부위: 상체
     모양: "cos260818:christmas_2_gingerbread_man_backpack"
+    높이올림: 0
     색변경: 예
   cos_christmas_2_gingerbread_staff:
     이름: "진저브레드 지팡이"
@@ -418,6 +427,7 @@
     이름: "크리퍼 가방"
     부위: 상체
     모양: "cos260818:creeper_creeper_backpack"
+    높이올림: 0
     색변경: 예
   cos_creeper_creeper_baseball_hat:
     이름: "크리퍼 모자"
@@ -435,6 +445,7 @@
     이름: "옵시디언 코어 백팩"
     부위: 상체
     모양: "cos260818:cyberpunk_gamer_arena_challenger_backpack"
+    높이올림: 0
     색변경: 예
   cos_cyberpunk_gamer_arena_challenger_visor:
     이름: "옵시디언 코어 바이저"
@@ -460,6 +471,7 @@
     이름: "하이퍼 제니스 제트팩"
     부위: 상체
     모양: "cos260818:cyberpunk_gamer_hyperspace_warrior_jetpack"
+    높이올림: 0
     색변경: 예
   cos_cyberpunk_gamer_hyperspace_warrior_propeller:
     이름: "하이퍼 제니스 프로펠러"
@@ -482,6 +494,7 @@
     이름: "바니 인형"
     부위: 상체
     모양: "cos260818:easter_3"
+    높이올림: 0
     색변경: 예
   cos_easter_4:
     이름: "바니 비니"
@@ -497,6 +510,7 @@
     이름: "버니 날개"
     부위: 상체
     모양: "cos260818:easter_6"
+    높이올림: 0
     색변경: 예
 
   # ── female_hanbok ──
@@ -504,6 +518,7 @@
     이름: "공주마마 한복"
     부위: 상체
     모양: "cos260818:female_hanbok_backpack"
+    높이올림: 0
     색변경: 예
   cos_female_hanbok_hat:
     이름: "공주마마 머리띠"
@@ -560,6 +575,7 @@
     이름: "저승사자 두루마기"
     부위: 상체
     모양: "cos260818:grim_reaper_backpack"
+    높이올림: 0
     색변경: 예
   cos_grim_reaper_hat:
     이름: "저승사자 모자"
@@ -577,6 +593,7 @@
     이름: "구미호 꼬리"
     부위: 상체
     모양: "cos260818:gumiho_backpack"
+    높이올림: 0
     색변경: 예
   cos_gumiho_hat:
     이름: "구미호 머리띠"
@@ -594,6 +611,7 @@
     이름: "사탕 배낭"
     부위: 상체
     모양: "cos260818:halloween_1_candy_pumpkin_backpack"
+    높이올림: 0
     색변경: 예
   cos_halloween_1_candy_pumpkin_beret:
     이름: "사탕 베레모"
@@ -614,6 +632,7 @@
     이름: "펌킨 날개"
     부위: 상체
     모양: "cos260818:halloween_1_spooky_pumpkin_wings"
+    높이올림: 0
     색변경: 예
 
   # ── icecream ──
@@ -633,6 +652,7 @@
     이름: "아홀로틀 수조"
     부위: 상체
     모양: "cos260818:lanshan_cos_axolotl_axolotl_tank"
+    높이올림: 0
     색변경: 예
   cos_lanshan_cos_axolotl_axolotl_water_gun:
     이름: "아홀로틀 물총"
@@ -655,6 +675,7 @@
     이름: "바닷가재 껍데기"
     부위: 상체
     모양: "cos260818:lanshan_cos_crab_seashell"
+    높이올림: 0
     색변경: 예
 
   # ── male_hanbok ──
@@ -662,6 +683,7 @@
     이름: "도련님 두루마기"
     부위: 상체
     모양: "cos260818:male_hanbok_backpack"
+    높이올림: 0
     색변경: 예
   cos_male_hanbok_hat:
     이름: "도련님 갓"
@@ -686,6 +708,7 @@
     이름: "곰돌이 파자마 백팩"
     부위: 상체
     모양: "cos260818:pajamas_bear_pajamas_bear_backpack_backpack_cosmetic_normal_2"
+    높이올림: 0
     색변경: 예
   cos_pajamas_bear_pajamas_bear_glove_offhand:
     이름: "곰돌이 파자마 장갑"
@@ -703,6 +726,7 @@
     이름: "토끼 파자마 백팩"
     부위: 상체
     모양: "cos260818:pajamas_rabbit_pajamas_rabbit_backpack_backpack_cosmetic_normal_2"
+    높이올림: 0
     색변경: 예
   cos_pajamas_rabbit_pajamas_rabbit_glove_offhand:
     이름: "토끼 파자마 장갑"
@@ -720,6 +744,7 @@
     이름: "피크닉 가방"
     부위: 상체
     모양: "cos260818:pastel_spring_pastel_spring_bag"
+    높이올림: 0
     색변경: 예
   cos_pastel_spring_pastel_spring_hat:
     이름: "피크닉 모자"
@@ -732,6 +757,7 @@
     이름: "브이로거 가방"
     부위: 상체
     모양: "cos260818:spring_outing_outing_backpack"
+    높이올림: 0
     색변경: 예
   cos_spring_outing_outing_camera:
     이름: "브이로거 카메라"
@@ -870,6 +896,7 @@
     이름: "테디 보이 가방"
     부위: 상체
     모양: "cos260818:valentine_2_teddy_bear_box"
+    높이올림: 0
     색변경: 예
   cos_valentine_2_valentines_bear_hat:
     이름: "테디베어 모자"
@@ -884,6 +911,7 @@
     이름: "장미 드레스"
     부위: 상체
     모양: "cos260818:valentine_2_wedding_dress"
+    높이올림: 0
     색변경: 예
   cos_valentine_2_wedding_veil:
     이름: "장미 베일"

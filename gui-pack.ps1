@@ -70,6 +70,25 @@ try {
     $blank.Save($blankPath, [System.Drawing.Imaging.ImageFormat]::Png)
     $blank.Dispose()
 
+    # ── 3-1) 염색 창의 색 네모 ───────────────────────────────────
+    #    흰 네모 한 장에 색을 입히는 방식이라, 테두리는 조금 어둡게 그려 두면
+    #    색이 입혀졌을 때 저절로 같은 색의 진한 테두리가 된다.
+    $sw = New-Object System.Drawing.Bitmap(16, 16, [System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
+    for ($y = 0; $y -lt 16; $y++) {
+        for ($x = 0; $x -lt 16; $x++) {
+            if ($x -eq 0 -or $y -eq 0 -or $x -eq 15 -or $y -eq 15) {
+                $sw.SetPixel($x, $y, [System.Drawing.Color]::FromArgb(0,0,0,0))
+            } elseif ($x -eq 1 -or $y -eq 1 -or $x -eq 14 -or $y -eq 14) {
+                $sw.SetPixel($x, $y, [System.Drawing.Color]::FromArgb(255,90,90,90))
+            } else {
+                $sw.SetPixel($x, $y, [System.Drawing.Color]::FromArgb(255,255,255,255))
+            }
+        }
+    }
+    $swatchPath = Join-Path $tmp 'swatch.png'
+    $sw.Save($swatchPath, [System.Drawing.Imaging.ImageFormat]::Png)
+    $sw.Dispose()
+
     # ── zip 에 넣기 ──────────────────────────────────────────────
     $archive = [System.IO.Compression.ZipFile]::Open($Zip, 'Update')
 
@@ -91,7 +110,7 @@ try {
     try {
         Put-File 'assets/minecraft/textures/gui/container/generic_54.png' $merged
 
-        foreach ($n in 'cos_home','cos_hat','cos_back','cos_hand',
+        foreach ($n in 'cos_home','cos_hat','cos_back','cos_hand','cos_dye',
                        'tool_home','tool_axe','tool_hoe','tool_pickaxe','tool_rod','tool_sword','tool_bow',
                        'pet_list') {
             Put-File "assets/taggame/textures/gui/$n.png" (Join-Path $Gui "$n.png")
@@ -126,7 +145,8 @@ try {
     { "type": "bitmap", "file": "taggame:gui/tool_sword.png",    "height": 256, "ascent": 39, "chars": ["$([char]0xE09A)"] },
     { "type": "bitmap", "file": "taggame:gui/gacha_preview_tool.png", "height": 256, "ascent": 39, "chars": ["$([char]0xE09B)"] },
     { "type": "bitmap", "file": "taggame:gui/pet_list.png",      "height": 256, "ascent": 39, "chars": ["$([char]0xE09C)"] },
-    { "type": "bitmap", "file": "taggame:gui/tool_bow.png",      "height": 256, "ascent": 39, "chars": ["$([char]0xE09D)"] }
+    { "type": "bitmap", "file": "taggame:gui/tool_bow.png",      "height": 256, "ascent": 39, "chars": ["$([char]0xE09D)"] },
+    { "type": "bitmap", "file": "taggame:gui/cos_dye.png",       "height": 256, "ascent": 39, "chars": ["$([char]0xE09E)"] }
   ]
 }
 "@
@@ -143,6 +163,22 @@ try {
   "model": {
     "type": "minecraft:model",
     "model": "taggame:item/blank"
+  }
+}
+'@
+        Put-File 'assets/taggame/textures/item/swatch.png' $swatchPath
+        Put-Text 'assets/taggame/models/item/swatch.json' @'
+{
+  "parent": "minecraft:item/generated",
+  "textures": { "layer0": "taggame:item/swatch" }
+}
+'@
+        Put-Text 'assets/taggame/items/swatch.json' @'
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "taggame:item/swatch",
+    "tints": [ { "type": "minecraft:dye", "default": -1 } ]
   }
 }
 '@
