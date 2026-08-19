@@ -918,3 +918,132 @@
     부위: 머리
     모양: "cos260818:valentine_2_wedding_veil"
     색변경: 예
+
+  # ── cos260820 (RR3 보관함) ─────────────────────────────────
+  cos_panda_hat:
+    이름: "판다 모자"
+    부위: 머리
+    모양: "cos260820:panda_hat"
+  cos_chef_hat:
+    이름: "요리사 모자"
+    부위: 머리
+    모양: "cos260820:chef_hat"
+  cos_cowboy_hat:
+    이름: "탐험가 모자"
+    부위: 머리
+    모양: "cos260820:cowboy_hat"
+  cos_snow_fox_sleeping:
+    이름: "북극 여우 모자"
+    부위: 머리
+    모양: "cos260820:snow_fox_sleeping"
+  cos_fox_headgear_1:
+    이름: "주황 여우 모자"
+    부위: 머리
+    모양: "cos260820:fox_headgear_1"
+  cos_fox_headgear_2:
+    이름: "하양 여우 모자"
+    부위: 머리
+    모양: "cos260820:fox_headgear_2"
+  cos_fox_headgear_3:
+    이름: "빨강 여우 모자"
+    부위: 머리
+    모양: "cos260820:fox_headgear_3"
+  cos_fox_headgear_4:
+    이름: "노랑 여우 모자"
+    부위: 머리
+    모양: "cos260820:fox_headgear_4"
+  cos_fox_headgear_5:
+    이름: "파랑 여우 모자"
+    부위: 머리
+    모양: "cos260820:fox_headgear_5"
+  cos_hat_chicken:
+    이름: "미친닭 모자"
+    부위: 머리
+    모양: "cos260820:hat_chicken"
+  cos_hat_horn:
+    이름: "바이킹 투구"
+    부위: 머리
+    모양: "cos260820:hat_horn"
+  cos_hat_long:
+    이름: "신사 모자"
+    부위: 머리
+    모양: "cos260820:hat_long"
+  cos_hat_rugby_helmet:
+    이름: "아이스하키 헬멧"
+    부위: 머리
+    모양: "cos260820:hat_rugby_helmet"
+  cos_hat_straw_hat:
+    이름: "밀짚모자"
+    부위: 머리
+    모양: "cos260820:hat_straw_hat"
+  cos_v2_hat_boxs:
+    이름: "박스 모자"
+    부위: 머리
+    모양: "cos260820:v2_hat_boxs"
+  cos_v2_hat_finn:
+    이름: "얼음곰 모자"
+    부위: 머리
+    모양: "cos260820:v2_hat_finn"
+  cos_penguin_hood:
+    이름: "펭귄 모자"
+    부위: 머리
+    모양: "cos260820:penguin_hood"
+  cos_witchcraft_mask:
+    이름: "무도사 수염"
+    부위: 머리
+    모양: "cos260820:witchcraft_mask"
+  cos_squirrel_tail:
+    이름: "다람쥐 꼬리"
+    부위: 상체
+    모양: "cos260820:squirrel_tail"
+    높이올림: 0
+  cos_fox_backpack_1:
+    이름: "주황 여우 배낭"
+    부위: 상체
+    모양: "cos260820:fox_backpack_1"
+    높이올림: 0
+  cos_fox_backpack_2:
+    이름: "하양 여우 배낭"
+    부위: 상체
+    모양: "cos260820:fox_backpack_2"
+    높이올림: 0
+  cos_fox_backpack_3:
+    이름: "빨강 여우 배낭"
+    부위: 상체
+    모양: "cos260820:fox_backpack_3"
+    높이올림: 0
+  cos_fox_backpack_4:
+    이름: "노랑 여우 배낭"
+    부위: 상체
+    모양: "cos260820:fox_backpack_4"
+    높이올림: 0
+  cos_fox_backpack_5:
+    이름: "파랑 여우 배낭"
+    부위: 상체
+    모양: "cos260820:fox_backpack_5"
+    높이올림: 0
+  cos_fox_tails_1:
+    이름: "주황 여우 꼬리"
+    부위: 상체
+    모양: "cos260820:fox_tails_1"
+    높이올림: 0
+  cos_fox_tails_2:
+    이름: "하양 여우 꼬리"
+    부위: 상체
+    모양: "cos260820:fox_tails_2"
+    높이올림: 0
+  cos_fox_tails_3:
+    이름: "빨강 여우 꼬리"
+    부위: 상체
+    모양: "cos260820:fox_tails_3"
+    높이올림: 0
+  cos_fox_tails_4:
+    이름: "노랑 여우 꼬리"
+    부위: 상체
+    모양: "cos260820:fox_tails_4"
+    높이올림: 0
+  cos_fox_tails_5:
+    이름: "파랑 여우 꼬리"
+    부위: 상체
+    모양: "cos260820:fox_tails_5"
+    높이올림: 0
