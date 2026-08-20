@@ -159,11 +159,18 @@ try {
                 $json = $json.Replace("`"$ns" + ":", "`"$ns" + ":item/")
                 if ($Lift.ContainsKey("$ns/$id")) { $json = Lift-Head $json $Lift["$ns/$id"] }
                 Put-Text "assets/$ns/models/$id.json" $json
+                # 모양 안에 "색이 입혀질 자리" 표시가 있으면, 그 자리에 염색 색을
+                # 흘려보내는 줄을 함께 넣어 준다. 이게 없으면 색을 정해 두어도
+                # 화면에는 본래 색 그대로 나온다.
+                $tintLine = ''
+                if ($json -match 'tintindex') {
+                    $tintLine = ",`n    `"tints`": [ { `"type`": `"minecraft:dye`", `"default`": -1 } ]"
+                }
                 Put-Text "assets/$ns/items/$id.json" @"
 {
   "model": {
     "type": "minecraft:model",
-    "model": "$ns`:$id"
+    "model": "$ns`:$id"$tintLine
   }
 }
 "@
