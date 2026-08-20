@@ -4,7 +4,8 @@
 
 | 파일 | 용도 | 다운로드 주소 |
 |---|---|---|
-| `DB.zip` | 서버 기본 리소스팩 (GUI 크기 3 기준) | https://raw.githubusercontent.com/Dchul/DB-resourcepack/main/DB.zip |
+| `DB_full.zip` | **접속자에게 실제로 내려가는 팩.** `DB.zip` + ItemsAdder 자산 | https://github.com/Dchul/DB-resourcepack/releases/download/pack/DB_full.zip |
+| `DB.zip` | 위의 재료. 아래 스크립트들이 만드는 팩 (GUI 크기 3 기준) | (배포되지 않음) |
 | `DB_font_scale2.zip` | `/글꼴 2` — GUI 크기 2용 글꼴 덧씌우기 | https://raw.githubusercontent.com/Dchul/DB-resourcepack/main/DB_font_scale2.zip |
 | `DB_font_scale4.zip` | `/글꼴 4` — GUI 크기 4용 글꼴 덧씌우기 | https://raw.githubusercontent.com/Dchul/DB-resourcepack/main/DB_font_scale4.zip |
 
@@ -103,3 +104,38 @@
    - `plugins/TagGame/config.yml` → `font-scale.scale-2` / `font-scale.scale-4`의 `url`·`sha1`
 
 다운로드 주소는 파일명이 같으면 변하지 않는다. 내용이 바뀌면 SHA-1만 갱신하면 된다.
+
+## ItemsAdder 합치기
+
+ItemsAdder는 자기 자산과 다른 팩을 합쳐 하나의 팩을 만든다. 그래서 배포되는 팩은
+`DB.zip`이 아니라 그 결과물을 다듬은 `DB_full.zip`이다.
+
+| 자리 | 내용 |
+|---|---|
+| 서버 `plugins/DBPack/resourcepack/` | `DB.zip`을 풀어 둔 것. ItemsAdder가 여기를 읽어 합친다 |
+| 서버 `plugins/ItemsAdder/output/generated.zip` | ItemsAdder가 만든 합본 |
+| `ia-merge.ps1` | 위 합본을 다듬어 `DB_full.zip`으로 만든다 |
+
+ItemsAdder 설정에서 꺼 둔 것들 (요청하지 않은 인게임 변화를 막기 위함):
+
+- 자체 팩 배포(`no-host`) — 팩은 지금까지대로 `server.properties`가 내려보낸다
+- 음표블록·버섯블록·후렴화 겉모습 가로채기
+- 가죽 갑옷 그림 덮어쓰기와 갑옷 셰이더
+- 바닐라 번역 덮어쓰기 (`염색됨` 표시 지우기 등) — `ia-merge.ps1`이 한 번 더 걷어낸다
+- 팩 압축·잠금 (직접 만든 자산이 망가지지 않게)
+
+`ia-merge.ps1`이 손보는 것:
+
+1. 글꼴 — ItemsAdder 내부 글꼴이 꼬리잡기 타이틀 아이콘과 같은 글자(U+E010~E018)를 쓴다.
+   ItemsAdder가 합치면서 꼬리잡기 쪽을 버리므로, `DB.zip`의 글꼴 항목을 뒤에 다시 붙여 되살린다
+   (마인크래프트는 뒤에 온 것이 이긴다)
+2. 바닐라 번역 덮어쓰기 제거
+3. 팩 이름을 `DB SERVER`로 되돌림
+
+### 팩을 새로 만들 때
+
+1. 기존대로 `*-pack.ps1`을 돌려 `DB.zip`을 만든다
+2. `DB.zip`을 서버 `plugins/DBPack/resourcepack/`에 풀어 덮어쓴다
+3. 서버 `plugins/ItemsAdder/output/generated.zip`을 지우고 서버를 재시작한다 (ItemsAdder가 다시 만든다)
+4. `ia-merge.ps1 -Generated <합본> -Source <풀어둔 폴더> -Output DB_full.zip`
+5. 커밋·푸시 → `gh release upload pack DB_full.zip --clobber` → SHA-1을 `server.properties`에 반영
