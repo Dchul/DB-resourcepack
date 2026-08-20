@@ -1,8 +1,9 @@
 # ItemsAdder가 만든 팩(generated.zip)을 서버 배포용 DB.zip으로 다듬는다.
 #
-# ItemsAdder는 자기 내부 글꼴이 쓰는 글자(U+E000~E022)를 default.json 앞쪽에 넣으면서
-# 같은 글자를 쓰는 DB 팩(꼬리잡기 타이틀 아이콘 9개)의 항목을 버린다.
-# 마인크래프트는 뒤에 온 항목이 이기므로, DB 원본 글꼴 항목을 통째로 뒤에 다시 붙인다.
+# ItemsAdder는 자기 내부 글꼴이 쓰는 글자(U+E000~E01A)를 default.json 앞쪽에 넣으면서
+# 같은 글자를 쓰는 DB 팩 항목을 버린다. 마인크래프트는 앞에 온 항목이 이기므로,
+# 겹치는 글자는 DB 쪽 그림이 아예 보이지 않는다. 그래서 칭호 그림은 U+E900~ 로 옮겨 두었다.
+# 혹시 ItemsAdder가 버린 항목이 또 생기면 살아나도록, DB 원본 글꼴 항목을 통째로 뒤에 다시 붙인다.
 
 param(
     [string]$Generated = "$PSScriptRoot\generated.zip",   # ItemsAdder 결과물
