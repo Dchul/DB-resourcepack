@@ -71,17 +71,18 @@ try {
     $blank.Dispose()
 
     # ── 3-1) 염색 창의 색 네모 ───────────────────────────────────
-    #    흰 네모 한 장에 색을 입히는 방식이라, 테두리는 조금 어둡게 그려 두면
-    #    색이 입혀졌을 때 저절로 같은 색의 진한 테두리가 된다.
+    #    흰 네모 한 장에 색을 입히는 방식이다. 색은 곱해져서 입혀지므로 밝게는
+    #    못 만들고 어둡게만 만들 수 있다. 그래서 테두리를 그대로 두고 안쪽만
+    #    조금 어둡게 그려 둔다. 색이 입혀지면 테두리가 안쪽보다 옅은 같은 색이 된다.
     $sw = New-Object System.Drawing.Bitmap(16, 16, [System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
     for ($y = 0; $y -lt 16; $y++) {
         for ($x = 0; $x -lt 16; $x++) {
             if ($x -eq 0 -or $y -eq 0 -or $x -eq 15 -or $y -eq 15) {
                 $sw.SetPixel($x, $y, [System.Drawing.Color]::FromArgb(0,0,0,0))
             } elseif ($x -eq 1 -or $y -eq 1 -or $x -eq 14 -or $y -eq 14) {
-                $sw.SetPixel($x, $y, [System.Drawing.Color]::FromArgb(255,90,90,90))
-            } else {
                 $sw.SetPixel($x, $y, [System.Drawing.Color]::FromArgb(255,255,255,255))
+            } else {
+                $sw.SetPixel($x, $y, [System.Drawing.Color]::FromArgb(255,216,216,216))
             }
         }
     }
