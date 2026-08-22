@@ -69,7 +69,9 @@
 | `gui/cos_home.png` `cos_hat.png` `cos_back.png` `cos_hand.png` | 치장 창 네 화면 |
 | `gui/tool_home.png` `tool_axe.png` `tool_hoe.png` `tool_pickaxe.png` `tool_rod.png` `tool_sword.png` | 도구 치장 창 여섯 화면 |
 | `gui/gacha_preview.png` | 뽑기 미리보기 창 (위쪽 보라색 띠는 넣을 때 지워진다) |
-| `gui-pack.ps1` | 위 두 장을 합쳐 상자 창 바탕을 만들고, 치장 창 네 장과 투명 물건 모양을 `DB.zip`에 넣는다 |
+| `gui/pin.png` | 야생 상자 잠금의 비밀번호 숫자판 창 |
+| `gui/pin_tablet.png` `gui/pin_card.png` | 상자 잠금에 쓰는 물건 두 개(단말기·카드 키)의 그림 |
+| `gui-pack.ps1` | 위 두 장을 합쳐 상자 창 바탕을 만들고, 창 그림들과 물건 모양을 `DB.zip`에 넣는다. 그 뒤 `taggame` 자산만 `DB_full.zip`과 서버의 풀어 둔 팩에도 그대로 옮긴다 |
 
 치장 창 그림은 창 제목에 글자 하나로 얹는 방식이라 위치 값(`ascent 39`)과 칸 번호가 서로 맞아야 한다. 그림에서 칸 자리를 옮겼다면 꼬리잡기 플러그인의 치장 창 칸 번호도 함께 봐야 한다.
 

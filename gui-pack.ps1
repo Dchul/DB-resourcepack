@@ -113,7 +113,7 @@ try {
 
         foreach ($n in 'cos_home','cos_hat','cos_back','cos_hand','cos_dye',
                        'tool_home','tool_axe','tool_hoe','tool_pickaxe','tool_rod','tool_sword','tool_bow',
-                       'pet_list') {
+                       'pet_list','pin') {
             Put-File "assets/taggame/textures/gui/$n.png" (Join-Path $Gui "$n.png")
         }
         Put-File 'assets/taggame/textures/gui/gacha_preview.png'      $previewPaths['gacha_preview']
@@ -129,6 +129,8 @@ try {
         #   e09b : 도구 치장 뽑기 미리보기 (위쪽에 갈래 단추가 있다)
         #   e09c : 펫 목록 (칸 36개 + 아래 좌우 화살표)
         #   e09d : 도구 치장 — 활
+        #   e09e : 치장 염색
+        #   e09f : 야생 상자 잠금의 비밀번호 숫자판
         $guiFont = @"
 {
   "providers": [
@@ -147,7 +149,8 @@ try {
     { "type": "bitmap", "file": "taggame:gui/gacha_preview_tool.png", "height": 256, "ascent": 39, "chars": ["$([char]0xE09B)"] },
     { "type": "bitmap", "file": "taggame:gui/pet_list.png",      "height": 256, "ascent": 39, "chars": ["$([char]0xE09C)"] },
     { "type": "bitmap", "file": "taggame:gui/tool_bow.png",      "height": 256, "ascent": 39, "chars": ["$([char]0xE09D)"] },
-    { "type": "bitmap", "file": "taggame:gui/cos_dye.png",       "height": 256, "ascent": 39, "chars": ["$([char]0xE09E)"] }
+    { "type": "bitmap", "file": "taggame:gui/cos_dye.png",       "height": 256, "ascent": 39, "chars": ["$([char]0xE09E)"] },
+    { "type": "bitmap", "file": "taggame:gui/pin.png",           "height": 256, "ascent": 39, "chars": ["$([char]0xE09F)"] }
   ]
 }
 "@
@@ -183,8 +186,70 @@ try {
   }
 }
 '@
+
+        # ── 4) 야생 상자 잠금의 물건 두 개 (단말기 · 카드 키) ─────────
+        foreach ($n in 'pin_tablet','pin_card') {
+            Put-File "assets/taggame/textures/item/$n.png" (Join-Path $Gui "$n.png")
+            Put-Text "assets/taggame/models/item/$n.json" `
+                ('{"parent":"minecraft:item/generated","textures":{"layer0":"taggame:item/' + $n + '"}}')
+            Put-Text "assets/taggame/items/$n.json" `
+                ('{"model":{"type":"minecraft:model","model":"taggame:item/' + $n + '"}}')
+        }
     } finally {
         $archive.Dispose()
+    }
+
+    # ── 손님에게 실제로 내려가는 팩에도 같은 것을 넣는다 ──────────
+    #    DB.zip은 재료일 뿐이고, 배포되는 것은 DB_full.zip이다. 여기서 옮기는 것은
+    #    전부 taggame 네임스페이스라 ItemsAdder 자산과 부딪히지 않는다.
+    #    (바닐라 자리를 덮는 generic_54.png는 옮기지 않는다 — 합치기 때 처리된다)
+    $mirror = @('assets/taggame/font/gui.json')
+    foreach ($n in 'cos_home','cos_hat','cos_back','cos_hand','cos_dye',
+                   'tool_home','tool_axe','tool_hoe','tool_pickaxe','tool_rod','tool_sword','tool_bow',
+                   'pet_list','pin','gacha_preview','gacha_preview_tool') {
+        $mirror += "assets/taggame/textures/gui/$n.png"
+    }
+    foreach ($n in 'blank','swatch','pin_tablet','pin_card') {
+        $mirror += "assets/taggame/textures/item/$n.png"
+        $mirror += "assets/taggame/models/item/$n.json"
+        $mirror += "assets/taggame/items/$n.json"
+    }
+
+    $src = [IO.Compression.ZipFile]::OpenRead($Zip)
+    try {
+        $payload = [ordered]@{}
+        foreach ($name in $mirror) {
+            $e = $src.Entries | Where-Object { $_.FullName -eq $name }
+            if (-not $e) { continue }
+            $ms = New-Object IO.MemoryStream
+            $s = $e.Open(); $s.CopyTo($ms); $s.Dispose()
+            $payload[$name] = $ms.ToArray()
+            $ms.Dispose()
+        }
+    } finally { $src.Dispose() }
+
+    $full = Join-Path $Root 'DB_full.zip'
+    if (Test-Path $full) {
+        $z = [IO.Compression.ZipFile]::Open($full, 'Update')
+        try {
+            foreach ($name in $payload.Keys) {
+                $old = $z.Entries | Where-Object { $_.FullName -eq $name }
+                if ($old) { $old.Delete() }
+                $e = $z.CreateEntry($name)
+                $s = $e.Open(); $s.Write($payload[$name], 0, $payload[$name].Length); $s.Dispose()
+            }
+        } finally { $z.Dispose() }
+        Write-Host ("DB_full.zip 에 " + $payload.Count + "개를 반영했습니다.")
+    }
+
+    $unpacked = 'C:\Users\dredr\OneDrive\문서\ServerEngine\servers\server_890160838\plugins\DBPack\resourcepack'
+    if (Test-Path $unpacked) {
+        foreach ($name in $payload.Keys) {
+            $dest = Join-Path $unpacked ($name -replace '/', '\')
+            New-Item -ItemType Directory -Force (Split-Path $dest) | Out-Null
+            [IO.File]::WriteAllBytes($dest, $payload[$name])
+        }
+        Write-Host ("풀어 둔 팩에 " + $payload.Count + "개를 반영했습니다.")
     }
 } finally {
     Remove-Item -Recurse -Force $tmp -ErrorAction SilentlyContinue
