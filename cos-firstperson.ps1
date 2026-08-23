@@ -27,7 +27,7 @@ $TableFile = Join-Path $Root 'firstperson.txt'
 # 한 칸 밀어 올릴 때 내려야 하는 높이 값. (반 칸 = 12.8)
 $PerRow  = 12.8
 # 밀어 올릴 수 있는 칸수의 상한. 많을수록 좋으므로 모양이 감당하는 데까지 올린다.
-$MaxRows = 8
+$MaxRows = 12
 # 게임이 허용하는 높이 값의 한계
 $Limit   = 80.0
 
@@ -99,14 +99,17 @@ try {
         }
         $k = $sMax / 4.0
         if ($k -lt 1.0 -and $k -gt 0) {
+            # 줄이는 기준점은 반드시 모양 칸의 한가운데(8)여야 한다. 게임이 모양을
+            # 그릴 때 한가운데를 기준으로 놓기 때문이다. 구석(0)을 기준으로 줄이면
+            # 크기는 맞아도 자리가 통째로 밀려 버린다.
             $script:factor = $k
             $grow = {
                 param($mm)
                 $nums = $mm.Groups[2].Value -split ','
                 $mm.Groups[1].Value +
-                    [Math]::Round([double]$nums[0] * $script:factor, 4) + ',' +
-                    [Math]::Round([double]$nums[1] * $script:factor, 4) + ',' +
-                    [Math]::Round([double]$nums[2] * $script:factor, 4) + ']'
+                    [Math]::Round(8 + ([double]$nums[0] - 8) * $script:factor, 4) + ',' +
+                    [Math]::Round(8 + ([double]$nums[1] - 8) * $script:factor, 4) + ',' +
+                    [Math]::Round(8 + ([double]$nums[2] - 8) * $script:factor, 4) + ']'
             }
             $triple = '("(?:from|to|origin)"\s*:\s*\[)\s*(-?[\d.]+\s*,\s*-?[\d.]+\s*,\s*-?[\d.]+)\s*\]'
             $json = [regex]::Replace($json, $triple, $grow)
