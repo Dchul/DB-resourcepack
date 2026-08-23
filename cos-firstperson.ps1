@@ -86,64 +86,64 @@ try {
         $t = [regex]::Match($head, '"translation"\s*:\s*\[\s*(-?[\d.]+)\s*,\s*(-?[\d.]+)\s*,\s*(-?[\d.]+)\s*\]')
         if (-not $t.Success) { $skipped += "$($b.key) (높이 값 없음)"; continue }
 
-        $y = [double]$t.Groups[2].Value
+        $y  = [double]$t.Groups[2].Value
+        $z0 = [double]$t.Groups[3].Value
         $room = $Limit - [Math]::Abs($y)
-        $rows = [Math]::Floor($room / $PerRow)
-        if ($rows -gt $MaxRows) { $rows = $MaxRows }
 
-        # 높이 값만으로는 한 칸도 못 내리는 치장은, 모자란 만큼 모양 자체를 아래로 옮긴다.
-        $carve = 0.0
-        if ($rows -lt 1) {
-            $rows = 1
-            $carve = ($PerRow - $room)   # 높이 값이 한계에 걸려 못 내린 나머지
-        }
+        # 모양은 '크기'로 부풀려진 뒤 '기울기'만큼 돌아간 다음 자리로 옮겨진다.
+        # 그러니 모양을 d 만큼 내리면 화면에서는 아래로 d × 크기 × cos(기울기) 만큼,
+        # 그리고 앞뒤로도 d × 크기 × sin(기울기) 만큼 밀린다. 아래로 내려간 양은
+        # 원하던 것이지만 앞뒤로 밀린 양은 어긋남이라 자리 값으로 되돌려 준다.
+        $sc = 1.0
+        $sm = [regex]::Match($head, '"scale"\s*:\s*\[\s*(-?[\d.]+)')
+        if ($sm.Success) { $sc = [double]$sm.Groups[1].Value }
+        $tilt = 0.0
+        $rm = [regex]::Match($head, '"rotation"\s*:\s*\[\s*(-?[\d.]+)')
+        if ($rm.Success) { $tilt = [double]$rm.Groups[1].Value }
+        $rad = $tilt * [Math]::PI / 180.0
+        $denom = $sc * [Math]::Cos($rad)
 
-        $newY = $y - ($PerRow * $rows)
-        if ($newY -lt -$Limit) { $newY = -$Limit }
-        $newZ = [double]$t.Groups[3].Value
-        $drop = 0.0
-
-        if ($carve -gt 0) {
-            # 모양은 '크기'로 부풀려진 뒤 '기울기'만큼 돌아간 다음 자리로 옮겨진다.
-            # 그러니 모양을 d 만큼 내리면 화면에서는 아래로 d × 크기 × cos(기울기) 만큼,
-            # 그리고 앞뒤로도 d × 크기 × sin(기울기) 만큼 밀린다.
-            # 아래로 내려간 양은 원하던 것이지만 앞뒤로 밀린 양은 어긋남이므로,
-            # 그만큼 자리 값을 되돌려 준다. (이걸 빼먹으면 몸에서 앞뒤로 떠 보인다)
-            $sc = 1.0
-            $sm = [regex]::Match($head, '"scale"\s*:\s*\[\s*(-?[\d.]+)')
-            if ($sm.Success) { $sc = [double]$sm.Groups[1].Value }
-            $tilt = 0.0
-            $rm = [regex]::Match($head, '"rotation"\s*:\s*\[\s*(-?[\d.]+)')
-            if ($rm.Success) { $tilt = [double]$rm.Groups[1].Value }
-            $rad = $tilt * [Math]::PI / 180.0
-            $denom = $sc * [Math]::Cos($rad)
-            if ([Math]::Abs($denom) -lt 0.01) { $skipped += "$($b.key) (너무 많이 기울어 옮길 수 없음)"; continue }
-            $drop = $carve / $denom
-            $newZ = $newZ + ($drop * $sc * [Math]::Sin($rad))
-            if ($newZ -gt $Limit) { $newZ = $Limit } elseif ($newZ -lt -$Limit) { $newZ = -$Limit }
-        }
-
-        $newT = '"translation":[' + $t.Groups[1].Value + ',' + $newY + ',' + [Math]::Round($newZ, 4) + ']'
-        $newHead = $head.Remove($t.Index, $t.Length).Insert($t.Index, $newT)
-        $fpJson = $json.Remove($m.Index, $m.Length).Insert($m.Index, $newHead)
-
-        if ($carve -gt 0) {
-            $lowest = $null
-            $shift = {
-                param($mm)
-                $nums = $mm.Groups[2].Value -split ','
-                $v = [double]$nums[1] - $drop
-                if ($null -eq $script:lowest -or $v -lt $script:lowest) { $script:lowest = $v }
-                $mm.Groups[1].Value + $nums[0] + ',' + [Math]::Round($v, 4) + ',' + $nums[2] + ']'
+        # 높이 뽑아 올리는 칸수는 많을수록 좋다 — 위를 더 가파르게 올려다보아야
+        # 사본이 화면에 들어온다. 그래서 가장 많은 칸수부터 넣어 보고, 모양의
+        # 좌표가 만들 수 있는 자리(-16) 밖으로 나가면 한 칸씩 줄인다.
+        $fpJson = $null; $rows = 0; $drop = 0.0
+        for ($try = $MaxRows; $try -ge 1; $try--) {
+            $carve = ($PerRow * $try) - $room     # 자리 값만으로 못 내리는 나머지
+            $d = 0.0
+            $newZ = $z0
+            if ($carve -gt 0.001) {
+                if ([Math]::Abs($denom) -lt 0.01) { continue }
+                $d = $carve / $denom
+                $newZ = $z0 + ($d * $sc * [Math]::Sin($rad))
+                if ($newZ -gt $Limit -or $newZ -lt -$Limit) { continue }
             }
-            $pat = '("(?:from|to|origin)"\s*:\s*\[)\s*(-?[\d.]+\s*,\s*-?[\d.]+\s*,\s*-?[\d.]+)\s*\]'
-            $fpJson = [regex]::Replace($fpJson, $pat, $shift)
-            if ($null -ne $lowest -and $lowest -lt -16) {
-                $skipped += "$($b.key) (모양이 만들 수 있는 자리 밖으로 나감)"
-                continue
+            $newY = $y - ($PerRow * $try)
+            if ($newY -lt -$Limit) { $newY = -$Limit }
+
+            $newT = '"translation":[' + $t.Groups[1].Value + ',' + $newY + ',' + [Math]::Round($newZ, 4) + ']'
+            $newHead = $head.Remove($t.Index, $t.Length).Insert($t.Index, $newT)
+            $candidate = $json.Remove($m.Index, $m.Length).Insert($m.Index, $newHead)
+
+            if ($d -gt 0) {
+                $script:lowest = $null
+                $script:dropAmount = $d
+                $shift = {
+                    param($mm)
+                    $nums = $mm.Groups[2].Value -split ','
+                    $v = [double]$nums[1] - $script:dropAmount
+                    if ($null -eq $script:lowest -or $v -lt $script:lowest) { $script:lowest = $v }
+                    $mm.Groups[1].Value + $nums[0] + ',' + [Math]::Round($v, 4) + ',' + $nums[2] + ']'
+                }
+                $pat = '("(?:from|to|origin)"\s*:\s*\[)\s*(-?[\d.]+\s*,\s*-?[\d.]+\s*,\s*-?[\d.]+)\s*\]'
+                $candidate = [regex]::Replace($candidate, $pat, $shift)
+                if ($null -ne $script:lowest -and $script:lowest -lt -16) { continue }
             }
-            $carved += "$($b.key) (모양을 $([Math]::Round($drop,2)) 만큼 옮김)"
+
+            $fpJson = $candidate; $rows = $try; $drop = $d
+            break
         }
+        if ($null -eq $fpJson) { $skipped += "$($b.key) (한 칸도 밀어 올릴 자리가 없음)"; continue }
+        if ($drop -gt 0) { $carved += "$($b.key) : $rows 칸 (모양을 $([Math]::Round($drop,2)) 만큼 옮김)" }
 
         $tintLine = ''
         if ($fpJson -match 'tintindex') {
