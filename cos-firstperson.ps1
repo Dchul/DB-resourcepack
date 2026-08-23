@@ -34,18 +34,20 @@ $Limit   = 80.0
 if (-not (Test-Path $Zip)) { throw "DB.zip이 없습니다: $Zip" }
 
 # ── 등에 다는 치장 목록 읽기 ─────────────────────────────────
+#  '1인칭숨김: 아니오' 를 적어 둔 치장은 건드리지 않는다 (위치를 견줘 보는 용도 등).
 $backs = @()
-$key = $null; $part = $null; $model = $null
+$key = $null; $part = $null; $model = $null; $opt = $true
 function Save-Item {
-    if ($script:part -eq '상체' -and $script:key -and $script:model) {
+    if ($script:part -eq '상체' -and $script:key -and $script:model -and $script:opt) {
         $script:backs += [pscustomobject]@{ key = $script:key; model = $script:model }
     }
-    $script:key = $null; $script:part = $null; $script:model = $null
+    $script:key = $null; $script:part = $null; $script:model = $null; $script:opt = $true
 }
 foreach ($line in ([IO.File]::ReadAllText((Join-Path $Root 'cosmetic-items.yml'), [Text.Encoding]::UTF8) -split "`r?`n")) {
     if     ($line -match '^\s{2}([A-Za-z0-9_]+):\s*$') { Save-Item; $key = $Matches[1] }
     elseif ($line -match '^\s+부위:\s*(\S+)')          { $part  = $Matches[1] }
     elseif ($line -match '^\s+모양:\s*"(.+)"')         { $model = $Matches[1] }
+    elseif ($line -match '^\s+1인칭숨김:\s*(\S+)')     { $opt   = ($Matches[1] -ne '아니오') }
 }
 Save-Item
 
