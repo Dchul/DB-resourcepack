@@ -26,8 +26,8 @@ $TableFile = Join-Path $Root 'firstperson.txt'
 
 # 한 칸 밀어 올릴 때 내려야 하는 높이 값. (반 칸 = 12.8)
 $PerRow  = 12.8
-# 아무리 여유가 많아도 이보다 더 밀지는 않는다.
-$MaxRows = 3
+# 밀어 올릴 수 있는 칸수의 상한. 많을수록 좋으므로 모양이 감당하는 데까지 올린다.
+$MaxRows = 8
 # 게임이 허용하는 높이 값의 한계
 $Limit   = 80.0
 
@@ -85,6 +85,54 @@ try {
         $head = $m.Value
         $t = [regex]::Match($head, '"translation"\s*:\s*\[\s*(-?[\d.]+)\s*,\s*(-?[\d.]+)\s*,\s*(-?[\d.]+)\s*\]')
         if (-not $t.Success) { $skipped += "$($b.key) (높이 값 없음)"; continue }
+
+        # ── 내릴 수 있는 여유를 최대로 벌어 둔다 ──
+        #  모양을 아래로 내리는 데 쓸 수 있는 밑천은 두 가지다. 자리 값(80까지)과
+        #  모양 좌표(-16까지)다. 그런데 모양 좌표를 잘게 줄이고 '크기'를 그만큼
+        #  키우면 보이는 모습은 똑같으면서 좌표 쪽 밑천이 늘어난다.
+        #  크기는 4까지만 허용되므로 거기에 딱 맞춰 줄여 둔다.
+        #  (이 사본은 등에 얹힐 때만 쓰이므로 창에 뜨는 모습에는 영향이 없다)
+        $sm = [regex]::Match($head, '"scale"\s*:\s*\[\s*(-?[\d.]+)\s*,\s*(-?[\d.]+)\s*,\s*(-?[\d.]+)\s*\]')
+        $sMax = 1.0
+        if ($sm.Success) {
+            foreach ($g in 1..3) { $v = [Math]::Abs([double]$sm.Groups[$g].Value); if ($v -gt $sMax) { $sMax = $v } }
+        }
+        $k = $sMax / 4.0
+        if ($k -lt 1.0 -and $k -gt 0) {
+            $script:factor = $k
+            $grow = {
+                param($mm)
+                $nums = $mm.Groups[2].Value -split ','
+                $mm.Groups[1].Value +
+                    [Math]::Round([double]$nums[0] * $script:factor, 4) + ',' +
+                    [Math]::Round([double]$nums[1] * $script:factor, 4) + ',' +
+                    [Math]::Round([double]$nums[2] * $script:factor, 4) + ']'
+            }
+            $triple = '("(?:from|to|origin)"\s*:\s*\[)\s*(-?[\d.]+\s*,\s*-?[\d.]+\s*,\s*-?[\d.]+)\s*\]'
+            $json = [regex]::Replace($json, $triple, $grow)
+            # 좌표를 줄이면서 글의 길이가 달라졌으므로 머리 자리를 다시 찾는다.
+            # (이걸 빼먹으면 엉뚱한 곳에 끼워 넣어 모양 파일이 깨진다)
+            $m = [regex]::Match($json, '"head"\s*:\s*\{[^{}]*\}')
+            if (-not $m.Success) { $skipped += "$($b.key) (머리 위치 없음)"; continue }
+            $head = $m.Value
+            $sm = [regex]::Match($head, '"scale"\s*:\s*\[\s*(-?[\d.]+)\s*,\s*(-?[\d.]+)\s*,\s*(-?[\d.]+)\s*\]')
+
+            # 줄인 만큼 크기를 키운다. 크기 항목이 없던 모양에는 새로 넣어 준다.
+            $newScale = if ($sm.Success) {
+                '"scale":[' +
+                    [Math]::Round([double]$sm.Groups[1].Value / $k, 4) + ',' +
+                    [Math]::Round([double]$sm.Groups[2].Value / $k, 4) + ',' +
+                    [Math]::Round([double]$sm.Groups[3].Value / $k, 4) + ']'
+            } else { '"scale":[4,4,4]' }
+            $head2 = if ($sm.Success) { $head.Remove($sm.Index, $sm.Length).Insert($sm.Index, $newScale) }
+                     else { $head.Insert($head.Length - 1, ',' + $newScale).Replace('{,', '{') }
+            $json = $json.Remove($m.Index, $m.Length).Insert($m.Index, $head2)
+            # 자리와 길이가 바뀌었으니 다시 찾는다
+            $m = [regex]::Match($json, '"head"\s*:\s*\{[^{}]*\}')
+            $head = $m.Value
+            $t = [regex]::Match($head, '"translation"\s*:\s*\[\s*(-?[\d.]+)\s*,\s*(-?[\d.]+)\s*,\s*(-?[\d.]+)\s*\]')
+            if (-not $t.Success) { $skipped += "$($b.key) (높이 값 없음)"; continue }
+        }
 
         $y  = [double]$t.Groups[2].Value
         $z0 = [double]$t.Groups[3].Value
