@@ -26,28 +26,22 @@ if (-not (Test-Path $Zip)) { throw "DB.zip이 없습니다: $Zip" }
 # 결과: "폴더이름/모양이름" -> 올릴 값
 $Lift = @{}
 $LiftDefault = 0.0
-# 1인칭에서 안 보이게 할 상체 치장. "폴더이름/모양이름" 들의 모음
-$SelfHide = New-Object 'System.Collections.Generic.HashSet[string]'
-$SelfDrop = 0.0
 $itemsFile = Join-Path $Root 'cosmetic-items.yml'
 if (Test-Path $itemsFile) {
-    $curPart = $null; $curModel = $null; $curLift = $null; $curSelf = $false
+    $curPart = $null; $curModel = $null; $curLift = $null
     function Save-Lift {
         if ($script:curPart -eq '상체' -and $script:curModel) {
             $amount = if ($null -ne $script:curLift) { $script:curLift } else { $script:LiftDefault }
             $script:Lift[$script:curModel.Replace(':','/')] = [double]$amount
-            if ($script:curSelf) { [void]$script:SelfHide.Add($script:curModel.Replace(':','/')) }
         }
-        $script:curPart = $null; $script:curModel = $null; $script:curLift = $null; $script:curSelf = $false
+        $script:curPart = $null; $script:curModel = $null; $script:curLift = $null
     }
     foreach ($line in ([IO.File]::ReadAllText($itemsFile, [Text.Encoding]::UTF8) -split "`r?`n")) {
         if     ($line -match '^상체높이올림:\s*(-?[\d.]+)')      { $LiftDefault = [double]$Matches[1] }
-        elseif ($line -match '^1인칭내림:\s*(-?[\d.]+)')          { $SelfDrop = [double]$Matches[1] }
         elseif ($line -match '^\s{2}([A-Za-z0-9_]+):\s*$')        { Save-Lift }
         elseif ($line -match '^\s+부위:\s*(\S+)')                 { $curPart  = $Matches[1] }
         elseif ($line -match '^\s+모양:\s*"(.+)"')                { $curModel = $Matches[1] }
         elseif ($line -match '^\s+높이올림:\s*(-?[\d.]+)')        { $curLift  = [double]$Matches[1] }
-        elseif ($line -match '^\s+1인칭숨김:\s*(\S+)')            { $curSelf  = ($Matches[1] -eq '예') }
     }
     Save-Lift
 }
@@ -181,31 +175,6 @@ try {
 }
 "@
                 $added++
-
-                # 1인칭에서 안 보이게 할 치장은, 모양을 아래로 내린 사본을 하나 더 넣는다.
-                # 치장 프로그램이 걸친 본인에게만 이 사본을 보여 주면서 머리 위로
-                # 밀어 올리기 때문에, 내린 만큼이 도로 맞아 등에 제대로 붙어 보인다.
-                if ($SelfHide.Contains("$ns/$id") -and $SelfDrop -ne 0) {
-                    $before = [regex]::Match($json, '"head"\s*:\s*\{[^{}]*"translation"\s*:\s*\[\s*-?[\d.]+\s*,\s*(-?[\d.]+)')
-                    $fpJson = Lift-Head $json (-$SelfDrop)
-                    if ($before.Success) {
-                        $want = [double]$before.Groups[1].Value - $SelfDrop
-                        if ($want -lt -80) {
-                            Write-Host ("  $id : 1인칭 사본을 " + [Math]::Round(-80 - $want, 2) +
-                                        " 만큼 더 내려야 하는데 한계에 걸렸습니다 (모양 자체를 손봐야 함)") -ForegroundColor Yellow
-                        }
-                    }
-                    Put-Text "assets/$ns/models/${id}_fp.json" $fpJson
-                    Put-Text "assets/$ns/items/${id}_fp.json" @"
-{
-  "model": {
-    "type": "minecraft:model",
-    "model": "$ns`:${id}_fp"$tintLine
-  }
-}
-"@
-                    $added++
-                }
             }
         }
 

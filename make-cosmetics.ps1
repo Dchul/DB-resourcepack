@@ -13,13 +13,12 @@ $menuTitle=@{ hat='머리'; back='등·어깨'; hand='손'; balloon='풍선' }
 
 # ── 목록 읽기 ────────────────────────────────────────────────
 $items=@()
-$key=$null;$nm=$null;$bu=$null;$mo=$null;$gr=$null;$dy=$false;$sf=$false
-$SelfRows=3
+$key=$null;$nm=$null;$bu=$null;$mo=$null;$gr=$null;$dy=$false
 function Flush{
   if($script:key -and $script:mo){
-    $script:items+=[pscustomobject]@{ key=$script:key; name=$script:nm; part=$script:bu; model=$script:mo; base=$script:gr; dye=$script:dy; self=$script:sf }
+    $script:items+=[pscustomobject]@{ key=$script:key; name=$script:nm; part=$script:bu; model=$script:mo; base=$script:gr; dye=$script:dy }
   }
-  $script:key=$null;$script:nm=$null;$script:bu=$null;$script:mo=$null;$script:gr=$null;$script:dy=$false;$script:sf=$false
+  $script:key=$null;$script:nm=$null;$script:bu=$null;$script:mo=$null;$script:gr=$null;$script:dy=$false
 }
 foreach($line in ([IO.File]::ReadAllText($src,[Text.Encoding]::UTF8) -split "`r?`n")){
   if($line -match '^\s{2}([A-Za-z0-9_]+):\s*$'){ Flush; $key=$Matches[1] }
@@ -28,10 +27,19 @@ foreach($line in ([IO.File]::ReadAllText($src,[Text.Encoding]::UTF8) -split "`r?
   elseif($line -match '^\s+모양:\s*"(.+)"'){ $mo=$Matches[1] }
   elseif($line -match '^\s+그릇:\s*(\S+)'){ $gr=$Matches[1] }
   elseif($line -match '^\s+색변경:\s*(\S+)'){ $dy=($Matches[1] -eq '예') }
-  elseif($line -match '^1인칭칸수:\s*(\d+)'){ $SelfRows=[int]$Matches[1] }
-  elseif($line -match '^\s+1인칭숨김:\s*(\S+)'){ $sf=($Matches[1] -eq '예') }
 }
 Flush
+
+# ── 1인칭에서 안 보이게 할 등 치장 표 읽기 ───────────────────
+#  cos-firstperson.ps1 이 만들어 두는 표다. 치장이름과 밀어 올릴 칸수가 적혀 있다.
+#  표가 없으면 그냥 그 기능 없이 만든다.
+$SelfRows=@{}
+$fpFile=Join-Path (Split-Path $src -Parent) 'firstperson.txt'
+if(Test-Path $fpFile){
+  foreach($line in [IO.File]::ReadAllLines($fpFile,[Text.Encoding]::UTF8)){
+    if($line -match '^([A-Za-z0-9_]+)\s+(\d+)\s*$'){ $SelfRows[$Matches[1]]=[int]$Matches[2] }
+  }
+}
 
 New-Item -ItemType Directory -Force -Path "$hmc\cosmetics","$hmc\menus" | Out-Null
 
@@ -52,9 +60,9 @@ foreach($i in $items){
   [void]$sb.AppendLine("    model-id: `"$($i.model)`"")
   [void]$sb.AppendLine("    name: `"<white>$($i.name)`"")
   [void]$sb.AppendLine("    amount: 1")
-  # 1인칭에서 안 보이게 하는 상체 치장 — 걸친 본인에게만 보여 줄 사본을 함께 적어 준다.
-  if($i.self -and $slot -eq 'BACKPACK'){
-    [void]$sb.AppendLine("  height: $SelfRows")
+  # 1인칭에서 안 보이게 하는 등 치장 — 걸친 본인에게만 보여 줄 사본을 함께 적어 준다.
+  if($slot -eq 'BACKPACK' -and $SelfRows.ContainsKey($i.key)){
+    [void]$sb.AppendLine("  height: $($SelfRows[$i.key])")
     [void]$sb.AppendLine("  firstperson-item:")
     [void]$sb.AppendLine("    material: $base")
     [void]$sb.AppendLine("    model-id: `"$($i.model)_fp`"")

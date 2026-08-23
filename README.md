@@ -34,13 +34,15 @@
 | `cos-manifest.txt` | 각 묶음에서 실제로 쓰는 파일 목록. `RR.zip`에는 골라내고 버린 것까지 있어서 이 목록으로 걸러 낸다 |
 | `cos*` 폴더 | 새로 받은 묶음을 따로 두는 자리. `RR.zip`에 이미 들어 있는 묶음은 폴더로 두지 않는다 |
 | `cos-pack.ps1` | 위 폴더들과 `RR.zip` 안의 묶음을 `DB.zip`에 넣는다 (게임이 알아듣는 연결 파일도 함께 만든다) |
+| `cos-firstperson.ps1` | 등 치장이 걸친 본인의 1인칭 화면을 가리지 않게, 본인에게만 보여 줄 사본(`<모양>_fp`)을 만들어 넣는다. **`cos-pack.ps1` 뒤에 돌린다** (그쪽이 다시 만들면 사본이 지워진다). 결과는 `firstperson.txt`로 남고 `make-cosmetics.ps1`이 읽어 간다 |
 
 `cos-pack.ps1`은 폴더로 남아 있는 묶음을 먼저 쓰고, 폴더가 없는 묶음만 `RR.zip`에서 꺼내 쓴다.
 꺼낼 때는 `cos-manifest.txt`에 적힌 파일만 가져온다. 묶음의 파일 구성을 바꿨다면 이 목록도 함께 고쳐야 한다.
 | `cosmetic-items.yml` | 치장의 이름·부위·모양 목록. **여기가 원본이다.** 색을 바꿀 수 있는 치장에는 `색변경: 예` 를 적는다 |
 | `make-cosmetics.ps1` | 위 목록을 읽어 서버의 HMCCosmetics 설정(치장 정의·창)을 통째로 다시 만든다 |
 
-치장을 늘리거나 이름을 고칠 때: `cosmetic-items.yml` 수정 → `make-cosmetics.ps1` 실행 → (모양이 새로 늘었으면) `cos-pack.ps1` 실행 후 아래 갱신 절차.
+치장을 늘리거나 이름을 고칠 때: `cosmetic-items.yml` 수정 → (모양이 새로 늘었으면) `cos-pack.ps1` → `cos-firstperson.ps1` → `make-cosmetics.ps1` 실행 후 아래 갱신 절차.
+등 치장이 늘었으면 `cos-firstperson.ps1`을 꼭 거쳐야 그 치장도 1인칭에서 가리지 않는다.
 
 `make-cosmetics.ps1`이 만드는 창(`menus/cos_*.yml`)은 지금은 쓰이지 않는다. `/치장` 창은 꼬리잡기 플러그인이 직접 그린다. 치장 정의(`cosmetics/cosmetics.yml`)는 계속 필요하다.
 
