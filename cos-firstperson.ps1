@@ -100,23 +100,34 @@ try {
 
         $newY = $y - ($PerRow * $rows)
         if ($newY -lt -$Limit) { $newY = -$Limit }
-        $newT = '"translation":[' + $t.Groups[1].Value + ',' + $newY + ',' + $t.Groups[3].Value + ']'
+        $newZ = [double]$t.Groups[3].Value
+        $drop = 0.0
+
+        if ($carve -gt 0) {
+            # 모양은 '크기'로 부풀려진 뒤 '기울기'만큼 돌아간 다음 자리로 옮겨진다.
+            # 그러니 모양을 d 만큼 내리면 화면에서는 아래로 d × 크기 × cos(기울기) 만큼,
+            # 그리고 앞뒤로도 d × 크기 × sin(기울기) 만큼 밀린다.
+            # 아래로 내려간 양은 원하던 것이지만 앞뒤로 밀린 양은 어긋남이므로,
+            # 그만큼 자리 값을 되돌려 준다. (이걸 빼먹으면 몸에서 앞뒤로 떠 보인다)
+            $sc = 1.0
+            $sm = [regex]::Match($head, '"scale"\s*:\s*\[\s*(-?[\d.]+)')
+            if ($sm.Success) { $sc = [double]$sm.Groups[1].Value }
+            $tilt = 0.0
+            $rm = [regex]::Match($head, '"rotation"\s*:\s*\[\s*(-?[\d.]+)')
+            if ($rm.Success) { $tilt = [double]$rm.Groups[1].Value }
+            $rad = $tilt * [Math]::PI / 180.0
+            $denom = $sc * [Math]::Cos($rad)
+            if ([Math]::Abs($denom) -lt 0.01) { $skipped += "$($b.key) (너무 많이 기울어 옮길 수 없음)"; continue }
+            $drop = $carve / $denom
+            $newZ = $newZ + ($drop * $sc * [Math]::Sin($rad))
+            if ($newZ -gt $Limit) { $newZ = $Limit } elseif ($newZ -lt -$Limit) { $newZ = -$Limit }
+        }
+
+        $newT = '"translation":[' + $t.Groups[1].Value + ',' + $newY + ',' + [Math]::Round($newZ, 4) + ']'
         $newHead = $head.Remove($t.Index, $t.Length).Insert($t.Index, $newT)
         $fpJson = $json.Remove($m.Index, $m.Length).Insert($m.Index, $newHead)
 
         if ($carve -gt 0) {
-            # 모양은 '크기'로 부풀려진 뒤 '기울기'만큼 돌아간 다음 자리로 옮겨진다.
-            # 그러니 모양을 d 만큼 내리면 화면에서는 d × 크기 × cos(기울기) 만큼 내려간다.
-            $sc = 1.0
-            $sm = [regex]::Match($newHead, '"scale"\s*:\s*\[\s*(-?[\d.]+)')
-            if ($sm.Success) { $sc = [double]$sm.Groups[1].Value }
-            $tilt = 0.0
-            $rm = [regex]::Match($newHead, '"rotation"\s*:\s*\[\s*(-?[\d.]+)')
-            if ($rm.Success) { $tilt = [double]$rm.Groups[1].Value }
-            $denom = $sc * [Math]::Cos($tilt * [Math]::PI / 180.0)
-            if ([Math]::Abs($denom) -lt 0.01) { $skipped += "$($b.key) (너무 많이 기울어 옮길 수 없음)"; continue }
-            $drop = $carve / $denom
-
             $lowest = $null
             $shift = {
                 param($mm)
