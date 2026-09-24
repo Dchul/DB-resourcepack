@@ -746,6 +746,8 @@
     모양: "cos260818:pastel_spring_pastel_spring_bag"
     높이올림: 0
     색변경: 예
+    # 걸친 본인에게도 남들이 보는 모습 그대로 보인다 (사본이 어긋나 보인다는 요청)
+    1인칭숨김: 아니오
   cos_pastel_spring_pastel_spring_hat:
     이름: "피크닉 모자"
     부위: 머리
