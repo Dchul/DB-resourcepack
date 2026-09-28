@@ -4,7 +4,7 @@
 #>
 $ErrorActionPreference='Stop'
 $srv="C:\Users\dredr\OneDrive\문서\ServerEngine\servers\server_890160838"
-$src="C:\Users\dredr\OneDrive\바탕 화면\Claude Code\Resourcepacks\cosmetic-items.yml"
+$src="$PSScriptRoot\cosmetic-items.yml"
 $hmc="$srv\plugins\HMCCosmetics"
 
 $slotMap=@{ '머리'='HELMET'; '상체'='BACKPACK'; '손'='OFFHAND'; '풍선'='BALLOON' }
