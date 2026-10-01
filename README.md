@@ -5,6 +5,7 @@
 | 파일 | 용도 | 다운로드 주소 |
 |---|---|---|
 | `DB_full.zip` | **접속자에게 실제로 내려가는 팩.** `DB.zip` + ItemsAdder 자산 | https://github.com/Dchul/DB-resourcepack/releases/download/pack/DB_full.zip |
+| `DB_official.zip` | 공식 서버용. `DB_full.zip`에서 치장·도구 치장·펫·칭호 자산을 걷어 낸 것 (`official-pack.ps1`이 만든다. `DB_full.zip`이 바뀌면 다시 돌린다) | https://github.com/Dchul/DB-resourcepack/releases/download/pack/DB_official.zip |
 | `DB.zip` | 위의 재료. 아래 스크립트들이 만드는 팩 (GUI 크기 3 기준) | (배포되지 않음) |
 | `DB_font_scale2.zip` | `/글꼴 2` — GUI 크기 2용 글꼴 덧씌우기 | https://raw.githubusercontent.com/Dchul/DB-resourcepack/main/DB_font_scale2.zip |
 | `DB_font_scale4.zip` | `/글꼴 4` — GUI 크기 4용 글꼴 덧씌우기 | https://raw.githubusercontent.com/Dchul/DB-resourcepack/main/DB_font_scale4.zip |
