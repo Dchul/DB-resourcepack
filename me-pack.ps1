@@ -17,12 +17,21 @@
 
   게임 판마다 쓰는 그림이 조금씩 달라서 ModelEngine은 '판별 덧씌우기' 폴더를
   여럿 만든다. 그 폴더들과, 어느 판에 어느 폴더를 쓸지 적은 목록까지 함께 옮긴다.
+
+  서버를 끄지 않아도 콘솔에서 "meg reload"를 치면 그림 묶음이 새로 구워진다.
+
+  -Zip DB_full.zip -KeepShaders 로 돌리면 ItemsAdder 합치기를 다시 하지 않고 배포 팩에 바로 넣는다.
+  (DB_full.zip에는 ItemsAdder의 셰이더가 함께 들어 있어서 셰이더 폴더를 통째로 비우면 안 된다)
 #>
+param(
+    [string]$Zip = 'DB.zip',
+    [switch]$KeepShaders
+)
 $ErrorActionPreference = 'Stop'
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 
 $Root   = $PSScriptRoot
-$Zip    = Join-Path $Root 'DB.zip'
+$Zip    = Join-Path $Root $Zip
 $Source = 'C:\Users\dredr\OneDrive\문서\ServerEngine\servers\server_890160838\plugins\ModelEngine\resource pack'
 
 if (-not (Test-Path $Zip))    { throw "DB.zip이 없습니다: $Zip" }
@@ -53,7 +62,7 @@ try {
         $_.FullName -like 'assets/modelengine/*' -or
         $_.FullName -like 'modelengine_*/*' -or
         $_.FullName -eq 'assets/minecraft/atlases/blocks.json' -or
-        $_.FullName -like 'assets/minecraft/shaders/*' -or
+        (-not $KeepShaders -and $_.FullName -like 'assets/minecraft/shaders/*') -or
         $_.FullName -like '*/items/leather_horse_armor.json' -or
         $_.FullName -like '*/models/item/leather_horse_armor.json'
     })

@@ -118,6 +118,8 @@
 | 파일 | 하는 일 |
 |---|---|
 | `me-pack.ps1` | ModelEngine이 구워 둔 모양 묶음을 통째로 `DB.zip`에 넣는다 (판별 덧씌우기 목록까지 함께) |
+| `pet-icon-pack.ps1` | 치이카와 펫 칸 그림(`Pet/chiikawa/icons`)을 `taggame:pet_<이름>`으로 `DB.zip`·`DB_full.zip`·풀어 둔 팩에 넣는다 |
+| `Pet/chiikawa/` | 치이카와 펫 원본과 변환기 (그 폴더 README 참고) |
 | `RR2.zip` | 몬스터 모양 보관함. 지금 쓰는 곳은 없다 |
 
 커스텀 펫은 두 쪽이 짝을 이룬다. 서버 쪽 원본(`plugins/ModelEngine/blueprints`의 `.bbmodel`)과,
@@ -126,9 +128,12 @@
 순서를 지켜야 한다.
 
 1. 새 펫 원본을 서버의 `plugins/ModelEngine/blueprints`에 넣는다
-2. 서버를 한 번 켰다 끈다 — 이때 그림 묶음이 새로 구워진다
+2. 서버를 한 번 켰다 끈다 — 이때 그림 묶음이 새로 구워진다 (켜 둔 채 콘솔에서 `meg reload`를 쳐도 된다)
 3. `me-pack.ps1`을 돌린다
-4. 아래 갱신 절차를 따른다
+4. ItemsAdder 합치기를 다시 하지 않으려면 `me-pack.ps1 -Zip DB_full.zip -KeepShaders`로 배포 팩에도 바로 넣고, `DB.zip`의 모양 부분(`assets/modelengine`, `modelengine_*`, `pack.mcmeta`)을 풀어 둔 팩(`plugins/DBPack/resourcepack`)에도 덮어쓴다
+5. 아래 갱신 절차를 따른다 (`DB_full.zip`이 바뀌었으니 `official-pack.ps1`도 다시 돌린다)
+
+**모양은 12개까지만 읽힌다**(ModelEngine 무료판). 지금 12칸이 다 찼고, 쿠리만쥬는 `internals/blueprints/internal_fire.bbmodel` 칸을 빌려 쓴다(그래서 `Render-Fire-On-Model: false`).
 
 `.data/cache.json`은 지우지 않는다. 모양마다 붙는 번호를 기억해 두는 파일이라,
 지우면 번호가 다시 매겨져서 이미 올려 둔 `DB.zip`과 어긋난다.

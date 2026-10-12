@@ -13,3 +13,6 @@ RR.zip
 tools-pending/
 
 RR2.zip
+
+# 치이카와 펫 원본 (모드에서 옮겨 온 그림과 창 아이콘)
+!Pet/chiikawa/**/*.png

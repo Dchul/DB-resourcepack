@@ -24,7 +24,7 @@ $drop = @(
     '^assets/minecraft/items/leather_horse_armor\.json$',  # 펫 모양 연결만 들어 있음
     '^assets/minecraft/font/title\.json$',                 # 칭호 그림 글자
     '^assets/taggame/textures/font/title/',
-    '^assets/taggame/(items|models/item|textures/item)/(title_|cos_)',
+    '^assets/taggame/(items|models/item|textures/item)/(title_|cos_|pet_)',  # 칭호·치장·치이카와 펫 칸 그림
     '^assets/taggame/textures/gui/(cos_|tool_|pet_list|gacha_preview)'
 )
 
