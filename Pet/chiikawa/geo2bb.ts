@@ -13,8 +13,13 @@ const HIDDEN = new Set([...(ch === "furuhonya" ? ["mouth2"] : []), ...(KEEP_MOUT
 const KEEP_ANIMS: Record<string, string> = Object.fromEntries(
   ["idle", "walk", "blink", "run", "sit", "swim", "swim_stand", "happy", "clap", "crab_greeting", "eat", "drink"].map((n) => [n, n]));
 // ModelEngine bone tags: h_ = turns with the entity's head, ir_ = shows what the entity holds in its main hand
-const RENAME: Record<string, string> = { allhead: "h_allhead", righthandlocator: "ir_hand" };
-const HAND_SCALE = 0.6; // the mod draws held items at 0.6 too
+const RENAME: Record<string, string> = { allhead: "h_allhead" };
+// The mod's HeldItemLayer, from RightHandLocator: turn X -90 (the item's up points out of the front of the fist),
+// move (0, 2, -1)px in that turned frame (into the palm, ahead of the knuckles), lift X +18, scale 0.6.
+// Both turns are about X, so this is one child bone ir_hand at locator + (0, -1, -2)px turned X -72, drawn at 0.6.
+const HAND_OFFSET = [0, -1, -2];
+const HAND_TURN = [-72, 0, 0];
+const HAND_SCALE = 0.6;
 
 let uuidN = 0;
 const uuid = () => crypto.randomUUID();
@@ -132,9 +137,12 @@ function build(b: Bone): any {
   const piv = b.pivot ?? [0, 0, 0];
   const rot = b.rotation ? [-b.rotation[0], -b.rotation[1], b.rotation[2]] : undefined;
   const g = group(uniq(RENAME[lname] ?? lname), [-piv[0], piv[1], piv[2]], rot);
-  // like the mod's HeldItemLayer: a hand that holds something is lifted forward a tenth of a turn
-  if (lname === "righthandlocator") g.rotation = [18, 0, 0];
   boneUuid.set(lname, g.uuid);
+  if (lname === "righthandlocator") {
+    const hand = group(uniq("ir_hand"), g.origin.map((v: number, i: number) => v + HAND_OFFSET[i]), HAND_TURN);
+    g.children.push(hand);
+    boneUuid.set("ir_hand", hand.uuid);
+  }
   // cubes whose rotation an item model cannot hold go into their own rotated sub-bone
   const sub = new Map<string, any>();
   for (const c of b.cubes ?? []) {
@@ -218,7 +226,6 @@ for (const [src, dst] of Object.entries(KEEP_ANIMS)) {
         });
       }
     }
-    if (bn.toLowerCase() === "righthandlocator") continue; // its scale is set below
     if (kfs.length) {
       // name as ModelEngine knows the bone
       const g = findGroup(outliner, id)!;
@@ -226,7 +233,7 @@ for (const [src, dst] of Object.entries(KEEP_ANIMS)) {
     }
   }
   // the held item is drawn at hand size in every animation
-  const handId = boneUuid.get("righthandlocator");
+  const handId = boneUuid.get("ir_hand");
   if (handId) {
     animators[handId] = { name: findGroup(outliner, handId).name, type: "bone", keyframes: [{
       channel: "scale", data_points: [{ x: String(HAND_SCALE), y: String(HAND_SCALE), z: String(HAND_SCALE) }],
