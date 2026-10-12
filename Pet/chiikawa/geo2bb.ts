@@ -132,6 +132,8 @@ function build(b: Bone): any {
   const piv = b.pivot ?? [0, 0, 0];
   const rot = b.rotation ? [-b.rotation[0], -b.rotation[1], b.rotation[2]] : undefined;
   const g = group(uniq(RENAME[lname] ?? lname), [-piv[0], piv[1], piv[2]], rot);
+  // like the mod's HeldItemLayer: a hand that holds something is lifted forward a tenth of a turn
+  if (lname === "righthandlocator") g.rotation = [18, 0, 0];
   boneUuid.set(lname, g.uuid);
   // cubes whose rotation an item model cannot hold go into their own rotated sub-bone
   const sub = new Map<string, any>();
