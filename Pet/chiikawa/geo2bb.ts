@@ -5,10 +5,16 @@ const geo = JSON.parse(Deno.readTextFileSync(`${assets}/models/entity/${ch}.json
 const anims = JSON.parse(Deno.readTextFileSync(`${assets}/animations/${ch}.json`)).animations;
 const png = Deno.readFileSync(`${assets}/textures/entities/${ch}.png`);
 
-// bones hidden by default in the mod (shown only during special actions) + prop bones
-const HIDDEN = new Set([...(ch === "furuhonya" ? ["mouth2"] : []), "mouth3", "happyeyes", "cryeyes", "tears", "tear", "sweat", "dots",
-  "exampaper", "exampencil", "guitar", "pouchstrap", "packstrap"]);
-const KEEP_ANIMS: Record<string, string> = { idle: "idle", walk: "walk", blink: "blink" };
+// bones hidden by default in the mod (shown only during special actions) + prop bones.
+// happyeyes (and mouth3 for hachiware/usagi) are kept: they show during "happy". The plugin hides them otherwise.
+const KEEP_MOUTH3 = ch === "hachiware" || ch === "usagi";
+const HIDDEN = new Set([...(ch === "furuhonya" ? ["mouth2"] : []), ...(KEEP_MOUTH3 ? [] : ["mouth3"]),
+  "cryeyes", "tears", "tear", "sweat", "dots", "exampaper", "exampencil", "guitar", "pouchstrap", "packstrap"]);
+const KEEP_ANIMS: Record<string, string> = Object.fromEntries(
+  ["idle", "walk", "blink", "run", "sit", "swim", "swim_stand", "happy", "clap", "crab_greeting", "eat", "drink"].map((n) => [n, n]));
+// ModelEngine bone tags: h_ = turns with the entity's head, ir_ = shows what the entity holds in its main hand
+const RENAME: Record<string, string> = { allhead: "h_allhead", righthandlocator: "ir_hand" };
+const HAND_SCALE = 0.6; // the mod draws held items at 0.6 too
 
 let uuidN = 0;
 const uuid = () => crypto.randomUUID();
@@ -39,7 +45,7 @@ for (const b of bones) {
 }
 // a bone is useful if it (or a descendant) has cubes
 const useful = (b: Bone): boolean =>
-  (b.cubes?.length ?? 0) > 0 || (children.get(b.name.toLowerCase()) ?? []).some(useful);
+  (b.cubes?.length ?? 0) > 0 || b.name.toLowerCase() === "righthandlocator" || (children.get(b.name.toLowerCase()) ?? []).some(useful);
 
 const VALID = new Set([-45, -22.5, 0, 22.5, 45]);
 const validRot = (r: number[]) => {
@@ -125,7 +131,7 @@ function build(b: Bone): any {
   const lname = b.name.toLowerCase();
   const piv = b.pivot ?? [0, 0, 0];
   const rot = b.rotation ? [-b.rotation[0], -b.rotation[1], b.rotation[2]] : undefined;
-  const g = group(uniq(lname), [-piv[0], piv[1], piv[2]], rot);
+  const g = group(uniq(RENAME[lname] ?? lname), [-piv[0], piv[1], piv[2]], rot);
   boneUuid.set(lname, g.uuid);
   // cubes whose rotation an item model cannot hold go into their own rotated sub-bone
   const sub = new Map<string, any>();
@@ -210,11 +216,19 @@ for (const [src, dst] of Object.entries(KEEP_ANIMS)) {
         });
       }
     }
+    if (bn.toLowerCase() === "righthandlocator") continue; // its scale is set below
     if (kfs.length) {
       // name as ModelEngine knows the bone
       const g = findGroup(outliner, id)!;
       animators[id] = { name: g.name, type: "bone", keyframes: kfs };
     }
+  }
+  // the held item is drawn at hand size in every animation
+  const handId = boneUuid.get("righthandlocator");
+  if (handId) {
+    animators[handId] = { name: findGroup(outliner, handId).name, type: "bone", keyframes: [{
+      channel: "scale", data_points: [{ x: String(HAND_SCALE), y: String(HAND_SCALE), z: String(HAND_SCALE) }],
+      uuid: uuid(), time: 0, color: -1, interpolation: "linear", easing: "linear", easingArgs: [] }] };
   }
   animations.push({
     uuid: uuid(), name: dst, loop: a.loop ? "loop" : "once", override: false,

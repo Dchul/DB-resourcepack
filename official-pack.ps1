@@ -19,6 +19,7 @@ $drop = @(
     '^assets/z_cosmetics/',                  # HMCCosmetics 옷장 창
     '^assets/toolskin/',                     # 도구 치장
     '^assets/modelengine/',                  # 펫 모양
+    '^assets/taggame/sounds',                # 치이카와 펫 목소리 (sounds.json 포함)
     '^assets/minecraft/items/potion\.json$',              # 치장 모양 연결만 들어 있음
     '^assets/minecraft/items/fermented_spider_eye\.json$', # 옷장 창 커서만 들어 있음
     '^assets/minecraft/items/leather_horse_armor\.json$',  # 펫 모양 연결만 들어 있음

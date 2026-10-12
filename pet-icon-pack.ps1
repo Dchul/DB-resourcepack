@@ -1,5 +1,5 @@
 ﻿<#
-  치이카와 펫 칸 그림(인형 그림)을 팩에 넣는다.
+  치이카와 펫 칸 그림(인형 그림)과 목소리를 팩에 넣는다.
 
   Pet\chiikawa\icons\ 의 그림을 taggame:pet_<이름> 자산으로 만들어
     - DB.zip          (원본 팩)
@@ -32,6 +32,24 @@ foreach ($c in $cards) {
         '{"model":{"type":"minecraft:model","model":"taggame:item/' + $id + '"}}')
 }
 
+# ── 목소리: Pet\chiikawa\sounds\<캐릭터>\tame_1.ogg / injured_*.ogg ──────
+#    taggame:chiikawa.<캐릭터>.tame / .hurt 로 들린다 (꼬리잡기 플러그인이 이 이름으로 튼다)
+$SoundSrc = Join-Path $Root 'Pet\chiikawa\sounds'
+$soundDefs = [ordered]@{}
+foreach ($dir in Get-ChildItem $SoundSrc -Directory) {
+    $ch = $dir.Name
+    $tame = @(); $hurt = @()
+    foreach ($ogg in Get-ChildItem $dir.FullName -Filter '*.ogg') {
+        $base = [IO.Path]::GetFileNameWithoutExtension($ogg.Name)
+        $files["assets/taggame/sounds/chiikawa/$ch/$($ogg.Name)"] = [IO.File]::ReadAllBytes($ogg.FullName)
+        if ($base -like 'tame*')    { $tame += "taggame:chiikawa/$ch/$base" }
+        if ($base -like 'injured*') { $hurt += "taggame:chiikawa/$ch/$base" }
+    }
+    if ($tame.Count) { $soundDefs["chiikawa.$ch.tame"] = @{ sounds = $tame } }
+    if ($hurt.Count) { $soundDefs["chiikawa.$ch.hurt"] = @{ sounds = $hurt } }
+}
+$files['assets/taggame/sounds.json'] = [Text.Encoding]::UTF8.GetBytes(($soundDefs | ConvertTo-Json -Depth 5))
+
 function Add-ToZip($zipPath) {
     if (-not (Test-Path $zipPath)) { Write-Host "  (없음, 건너뜀) $zipPath"; return }
     $zip = [IO.Compression.ZipFile]::Open($zipPath, 'Update')
@@ -62,4 +80,4 @@ if (Test-Path $Unpacked) {
     Write-Host "  (없음, 건너뜀) $Unpacked"
 }
 
-Write-Host ("치이카와 아이콘 " + $cards.Count + "개를 팩에 넣었습니다.")
+Write-Host ("치이카와 아이콘 " + $cards.Count + "개, 목소리 " + $soundDefs.Count + "가지를 팩에 넣었습니다.")
