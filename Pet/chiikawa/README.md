@@ -8,6 +8,6 @@
 | `geo2bb.ts` | 원본을 ModelEngine용 `.bbmodel`로 바꾼다. `deno run -A geo2bb.ts source <캐릭터> <출력.bbmodel> <모양이름>` |
 | `icons/` | 모드의 인형 그림(16x16). `/펫`·`/치이카와` 창 칸 그림으로 쓴다 (`taggame:pet_<이름>`) |
 
-변환기가 하는 일: 평소에 숨겨진 표정 부위(입 벌림·웃는 눈·눈물·땀·시험지·가방끈 등)는 뺀다. 아이템 모양이 담을 수 없는 각도로 돌아간 조각은 따로 돌린 부위로 감싼다. 움직임은 idle·walk·blink 셋만 옮긴다. hitbox 부위를 덧붙인다.
+변환기가 하는 일: 평소에 숨겨진 표정 부위(눈물·땀·시험지·가방끈 등)는 뺀다. 웃는 눈(happyeyes)과 하치와레·우사기의 벌린 입(mouth3)은 남겨 두고 플러그인이 평소에 숨긴다. 아이템 모양이 담을 수 없는 각도로 돌아간 조각은 따로 돌린 부위로 감싼다. 움직임은 idle·walk·blink·run·sit·swim·swim_stand·happy·clap·crab_greeting·eat·drink를 옮긴다(캐릭터마다 없는 것도 있다). 머리(allhead)는 `h_allhead`로 바꿔 사람 쪽으로 돌게 하고, 오른손 자리(RightHandLocator)는 `ir_hand`로 남겨 손에 든 아이템을 그리게 한다(크기 0.6). hitbox 부위를 덧붙인다. 목소리는 `sounds/`, `pet-icon-pack.ps1`이 팩에 넣는다.
 
 서버 배치: `plugins/ModelEngine/blueprints/chiikawa/<이름>.bbmodel`, 단 **쿠리만쥬는 자리(12개 제한)가 모자라 `internals/blueprints/internal_fire.bbmodel`에 모양 이름 `internal_fire`로 들어간다.** MythicMobs 몹은 `Packs/chiikawa`, MCPets 펫은 `Pets/chiikawa`.
