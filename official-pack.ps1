@@ -61,6 +61,14 @@ try {
         } finally { $src.Dispose(); $dst.Dispose() }
         $kept++
     }
+
+    # 공식 서버 전용 탭 목록 그림(official-tab/make-tab-art.ps1이 만든 것)을 더한다
+    $extra = Join-Path $PSScriptRoot 'official-tab'
+    Get-ChildItem (Join-Path $extra 'assets') -Recurse -File | ForEach-Object {
+        $rel = $_.FullName.Substring($extra.Length + 1).Replace('\', '/')
+        [void][IO.Compression.ZipFileExtensions]::CreateEntryFromFile($out, $_.FullName, $rel, [IO.Compression.CompressionLevel]::Optimal)
+        $kept++
+    }
 } finally { $in.Dispose(); $out.Dispose() }
 
 Write-Host "kept $kept, dropped $dropped -> $Output"
