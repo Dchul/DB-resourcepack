@@ -1,11 +1,12 @@
 ﻿# 공식 서버 탭 목록(TAB)에 쓰는 그림 글자를 만든다.
 #   - 로고 "DB SERVER" (빛이 지나가는 움직임 12장)
 #   - 작은 그림: 트로피·검·교차 검·모래시계·사람·점·구분선
-# 결과는 이 폴더의 assets/ 아래에 생기고, official-pack.ps1이 DB_official.zip에 넣는다.
+# 결과는 이 폴더의 assets/ 아래에 생기고, tab-pack.ps1이 DB.zip·DB_full.zip·지인 서버의 풀어 둔 팩에 넣는다.
+# (DB_official.zip은 DB_full.zip에서 만들어지므로 따라 들어간다)
 #
 # 글자 번호 (글꼴 taggame:tab)
 #   E200~E223  로고 12장(장마다 3조각)   E110 트로피   E111 검      E112 교차 검
-#   E113 모래시계  E114 사람     E115 점(흰색, 글자색으로 물듦)  E120~E123 구분선 4조각(흰색, 물듦)
+#   E113 모래시계  E114 사람     E117 메달  E118 나무  E115 점(흰색, 글자색으로 물듦)  E120~E123 구분선 4조각(흰색, 물듦)
 #
 # 그림은 GUI 크기 3 기준으로 글자 한 칸 = 3픽셀 해상도로 그린다(팩 전체 기준과 같음).
 
@@ -163,6 +164,24 @@ $fore = [Drawing.SolidBrush]::new((C '#E8EEF6'))
 $g.FillEllipse($fore, 6, 6, 11, 11); $g.FillPie($fore, 1, 18, 21, 20, 180, 180)
 Save $cv 'people.png'
 
+# 메달 (순위)
+$cv = New-Canvas $S $S; $g = $cv.g
+$g.FillPolygon([Drawing.SolidBrush]::new((C '#E0565B')), (Poly @(7,1, 13,1, 18,14, 12,14)))
+$g.FillPolygon([Drawing.SolidBrush]::new((C '#5B8DEF')), (Poly @(19,1, 25,1, 20,14, 14,14)))
+$medal = [Drawing.Drawing2D.LinearGradientBrush]::new(([Drawing.Rectangle]::new(6,12,20,20)), (C '#FFE9A6'), (C '#E39A2C'), 45)
+$g.FillEllipse($medal, 6, 11, 20, 20); $g.DrawEllipse([Drawing.Pen]::new((C '#8A5A14'), 1.6), 6, 11, 20, 20)
+$g.DrawEllipse([Drawing.Pen]::new((C '#FFF6D6' 200), 1.2), 10, 15, 12, 12)
+$g.FillPolygon([Drawing.SolidBrush]::new((C '#B9771E')), (Poly @(16,16.5, 17.4,19.6, 20.7,19.9, 18.2,22.1, 18.9,25.4, 16,23.7, 13.1,25.4, 13.8,22.1, 11.3,19.9, 14.6,19.6)))
+Save $cv 'medal.png'
+
+# 나무 (야생)
+$cv = New-Canvas $S $S; $g = $cv.g
+$g.FillRectangle([Drawing.SolidBrush]::new((C '#8B5A2B')), 13, 20, 6, 10)
+$leaf = [Drawing.Drawing2D.LinearGradientBrush]::new(([Drawing.Rectangle]::new(3,1,26,22)), (C '#9BE07A'), (C '#3E9B4F'), 90)
+$g.FillEllipse($leaf, 3, 9, 14, 13); $g.FillEllipse($leaf, 15, 9, 14, 13); $g.FillEllipse($leaf, 8, 1, 16, 16)
+$g.FillEllipse([Drawing.SolidBrush]::new((C '#FFFFFF' 90)), 12, 5, 5, 4)
+Save $cv 'tree.png'
+
 # 점 (흰색 — 글자색으로 물들여 상태 색으로 쓴다)
 $cv = New-Canvas 24 24; $cv.g.FillEllipse([Drawing.Brushes]::White, 5, 5, 14, 14); Save $cv 'dot.png'
 
@@ -187,7 +206,7 @@ $prov = New-Object Collections.Generic.List[string]
 for ($f = 0; $f -lt $frames; $f++) {
     for ($s = 0; $s -lt 3; $s++) { $prov.Add((Bitmap ('logo_{0:D2}_{1}.png' -f $f, $s) $logoHeight ($logoHeight - 4) (0xE200 + $f * 3 + $s))) }
 }
-$icons = @(@('trophy',0xE110), @('sword',0xE111), @('swords',0xE112), @('hourglass',0xE113), @('people',0xE114))
+$icons = @(@('trophy',0xE110), @('sword',0xE111), @('swords',0xE112), @('hourglass',0xE113), @('people',0xE114), @('medal',0xE117), @('tree',0xE118))
 foreach ($ic in $icons) { $prov.Add((Bitmap ($ic[0] + '.png') 9 8 $ic[1])) }
 $prov.Add((Bitmap 'dot.png' 8 7 0xE115))
 # 구분선 4조각 → E120~E123

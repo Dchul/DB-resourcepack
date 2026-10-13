@@ -17,5 +17,5 @@ RR2.zip
 # 치이카와 펫 원본 (모드에서 옮겨 온 그림과 창 아이콘)
 !Pet/chiikawa/**/*.png
 
-# 공식 서버 탭 그림은 official-pack.ps1이 그대로 넣으므로 추적한다
-!official-tab/assets/**/*.png
+# 탭 목록 그림은 tab-pack.ps1이 그대로 넣으므로 추적한다
+!tab-art/assets/**/*.png
