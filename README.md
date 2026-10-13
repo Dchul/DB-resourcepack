@@ -5,7 +5,7 @@
 | 파일 | 용도 | 다운로드 주소 |
 |---|---|---|
 | `DB_full.zip` | **접속자에게 실제로 내려가는 팩.** `DB.zip` + ItemsAdder 자산 | https://github.com/Dchul/DB-resourcepack/releases/download/pack/DB_full.zip |
-| `DB_official.zip` | 공식 서버용. `DB_full.zip`에서 치장·도구 치장·펫·칭호 자산을 걷어 낸 것 (`official-pack.ps1`이 만든다. `DB_full.zip`이 바뀌면 다시 돌린다) | https://github.com/Dchul/DB-resourcepack/releases/download/pack/DB_official.zip |
+| `DB_official.zip` | 공식 서버용. `DB_full.zip`에서 치장·도구 치장·펫·칭호 자산을 걷어 낸 것 (`official-pack.ps1`이 만든다. `DB_full.zip`이 바뀌면 다시 돌린다). 공식 서버 전용 탭 목록 그림(`official-tab/`)도 이때 더해진다 | https://github.com/Dchul/DB-resourcepack/releases/download/pack/DB_official.zip |
 | `DB.zip` | 위의 재료. 아래 스크립트들이 만드는 팩 (GUI 크기 3 기준) | (배포되지 않음) |
 | `DB_font_scale2.zip` | `/글꼴 2` — GUI 크기 2용 글꼴 덧씌우기 | https://raw.githubusercontent.com/Dchul/DB-resourcepack/main/DB_font_scale2.zip |
 | `DB_font_scale4.zip` | `/글꼴 4` — GUI 크기 4용 글꼴 덧씌우기 | https://raw.githubusercontent.com/Dchul/DB-resourcepack/main/DB_font_scale4.zip |
@@ -185,3 +185,11 @@ ItemsAdder 설정에서 꺼 둔 것들 (요청하지 않은 인게임 변화를 
 3. 서버 `plugins/ItemsAdder/output/generated.zip`을 지우고 서버를 재시작한다 (ItemsAdder가 다시 만든다)
 4. `ia-merge.ps1 -Generated <합본> -Source <풀어둔 폴더> -Output DB_full.zip`
 5. 커밋·푸시 → `gh release upload pack DB_full.zip --clobber` → SHA-1을 `server.properties`에 반영
+
+## 공식 서버 탭 목록 그림
+
+| 파일 | 하는 일 |
+|---|---|
+| `official-tab/make-tab-art.ps1` | 탭 맨 위 로고(빛이 지나가는 12장)와 작은 그림(트로피·검·모래시계·사람·상태 점·구분선)을 그려 `official-tab/assets`에 넣는다. 글꼴 이름은 `taggame:tab`, 글자 번호는 스크립트 머리 주석에 있다 |
+
+그림을 고쳤으면 `make-tab-art.ps1` → `official-pack.ps1` → 갱신 절차. 마인크래프트는 그림 글자 한 장이 256픽셀을 넘으면 못 그리고(네모로 나옴), ascent가 height보다 크면 글꼴 파일 전체가 안 읽힌다 — 넓은 그림은 조각 내서 넣는다.
