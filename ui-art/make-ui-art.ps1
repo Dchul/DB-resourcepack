@@ -1,5 +1,8 @@
 ﻿# 공식 서버 채팅 줄 앞 아이콘(글꼴 taggame:ui)을 만든다. 꼬리잡기 공식 서버판 text/Tag와 순서가 맞아야 한다.
-#   E300~E309  아이콘 (안내·매칭·게임·탈락·능력·보상·채팅·관리·거절·공지)
+#   E300~E309  채팅 아이콘 (안내·매칭·게임·탈락·능력·보상·채팅·관리·거절·공지)
+#   E320~E324  능력 갈래 배지 (지금은 안 씀)   E330~E334  키 모양 (지금은 안 씀)
+#   E340 시계(쿨타임) E341 모래시계(지속) E342 마우스 좌클릭 E343 마우스 우클릭
+#   E350 구분선   E351 세로 막대(창 이름·능력 구획 앞, 글자색으로 물듦)
 #   E3F1 = 1칸 띄움, E3F2 = 2칸, E3FA = 10칸(아이콘 폭, 여러 줄 채팅 들여쓰기), E3FF = -1칸
 # 그림은 GUI 크기 3 기준(글자 한 칸 = 3픽셀)으로 그린다. 결과는 이 폴더의 assets/ 아래.
 
@@ -139,6 +142,85 @@ foreach ($k in $kinds) {
     Save $cv ("icon_" + $k.id + ".png")
 }
 
+# ── 능력 머리말 배지 (E320~) ────────────────────────────────────────────
+$pills = @(
+    @{ id='active';  color='#FF9F43'; label='발동' },
+    @{ id='control'; color='#4FB3FF'; label='조작' },
+    @{ id='passive'; color='#3FC495'; label='패시브' },
+    @{ id='state';   color='#A77BF0'; label='상태이상' },
+    @{ id='note';    color='#6F7684'; label='정보' }
+)
+function Draw-Pill([string]$label, [string]$fill, [string]$textColor, [string]$border, [string]$name) {
+    $H = 27; $em = 19.5
+    $probe = TextPath $label $em 0 0
+    $tw = $probe.GetBounds().Width
+    $W = [int]([Math]::Ceiling(($tw + 14) / 3.0) * 3)
+    $cv = New-Canvas $W $H; $g = $cv.g
+    $p = RoundRect 0.5 1.5 ($W - 1) ($H - 3) 5
+    if ($fill) { $g.FillPath([Drawing.SolidBrush]::new((C $fill)), $p) }
+    if ($border) { $g.DrawPath([Drawing.Pen]::new((C $border), 2), $p) }
+    $tp = TextPath $label $em ($W / 2) ($H / 2 + 0.3)
+    $g.FillPath([Drawing.SolidBrush]::new((C $textColor)), $tp)
+    Save $cv $name
+}
+foreach ($pl in $pills) { Draw-Pill $pl.label $pl.color '#FFFFFF' $null ("pill_" + $pl.id + ".png") }
+
+# ── 조작 키 (E330~) — 테두리만 있는 키 모양 ─────────────────────────────
+$keys = @(
+    @{ id='click';  label='클릭' },
+    @{ id='left';   label='좌클릭' },
+    @{ id='right';  label='우클릭' },
+    @{ id='shift';  label='쉬프트+클릭' },
+    @{ id='f';      label='F' }
+)
+foreach ($k in $keys) { Draw-Pill $k.label '#3A2F12' '#FFD166' '#FFD166' ("key_" + $k.id + ".png") }
+
+# ── 작은 그림 (E340~) ──────────────────────────────────────────────────
+# 시계 (쿨타임)
+$cv = New-Canvas 27 27; $g = $cv.g
+$pen = [Drawing.Pen]::new((C '#FFFFFF'), 2.6)
+$g.DrawEllipse($pen, 3, 3, 21, 21)
+$pen.StartCap = 'Round'; $pen.EndCap = 'Round'
+$g.DrawLine($pen, 13.5, 13.5, 13.5, 7.5); $g.DrawLine($pen, 13.5, 13.5, 18, 15.5)
+Save $cv 'clock.png'
+# 모래시계 (지속)
+$cv = New-Canvas 27 27; $g = $cv.g
+$wb = [Drawing.SolidBrush]::new((C '#FFFFFF'))
+$g.FillRectangle($wb, 6, 2, 15, 3); $g.FillRectangle($wb, 6, 22, 15, 3)
+$g.DrawPolygon([Drawing.Pen]::new((C '#FFFFFF'), 2.2), (Poly @(8,5, 19,5, 15,13.5, 19,22, 8,22, 12,13.5)))
+$g.FillPolygon($wb, (Poly @(10,17.5, 17,17.5, 18,21, 9,21)))
+Save $cv 'hourglass.png'
+
+# 마우스 (E342 좌클릭, E343 우클릭) — 누르는 쪽 단추만 노랗게
+foreach ($side in @('left', 'right')) {
+    $cv = New-Canvas 21 27; $g = $cv.g
+    $body = RoundRect 2 2 17 23 8
+    $g.FillPath([Drawing.SolidBrush]::new((C '#2A2D34')), $body)
+    $g.SetClip($body)
+    $bx = if ($side -eq 'left') { 2 } else { 10.5 }
+    $g.FillRectangle([Drawing.SolidBrush]::new((C '#FFD166')), $bx, 2, 8.5, 10)
+    $g.ResetClip()
+    $g.DrawPath([Drawing.Pen]::new((C '#D8DCE3'), 1.8), $body)
+    $g.DrawLine([Drawing.Pen]::new((C '#D8DCE3'), 1.4), 10.5, 2, 10.5, 12)
+    $g.DrawLine([Drawing.Pen]::new((C '#D8DCE3'), 1.4), 2, 12, 19, 12)
+    Save $cv "mouse_$side.png"
+}
+
+# ── 구분선 (E350) — 왼쪽은 진하고 오른쪽으로 사라짐, 흰색이라 글자색으로 물든다 ──
+$LW = 240; $cv = New-Canvas $LW 27
+for ($i = 0; $i -lt $LW; $i++) {
+    $t = $i / $LW
+    $a = [int](255 * [Math]::Max(0, 1 - [Math]::Pow($t, 1.6)))
+    $cv.bmp.SetPixel($i, 13, [Drawing.Color]::FromArgb($a, 255, 255, 255))
+    $cv.bmp.SetPixel($i, 14, [Drawing.Color]::FromArgb([int]($a * 0.35), 255, 255, 255))
+}
+Save $cv 'line.png'
+
+# ── 세로 막대 (E351) — 구획 머리 앞에 세우는 색 막대, 글자색으로 물든다 ──
+$cv = New-Canvas 6 27
+$cv.g.FillRectangle([Drawing.Brushes]::White, 0, 1, 6, 25)
+Save $cv 'bar.png'
+
 # ── 글꼴 설정 ───────────────────────────────────────────────────────────
 function U([int]$cp) { '\u{0:X4}' -f $cp }
 function Bitmap([string]$file, [int]$height, [int]$ascent, [int]$cp) {
@@ -148,7 +230,15 @@ $prov = New-Object Collections.Generic.List[string]
 for ($i = 0; $i -lt $kinds.Count; $i++) {
     $prov.Add((Bitmap ("icon_" + $kinds[$i].id + ".png") 9 8 (0xE300 + $i)))
 }
-$prov.Add('{"type":"space","advances":{"' + (U 0xE3F1) + '":1,"' + (U 0xE3F2) + '":2,"' + (U 0xE3FA) + '":10,"' + (U 0xE3FF) + '":-1}}')
+for ($i = 0; $i -lt $pills.Count; $i++) { $prov.Add((Bitmap ("pill_" + $pills[$i].id + ".png") 9 8 (0xE320 + $i))) }
+for ($i = 0; $i -lt $keys.Count; $i++) { $prov.Add((Bitmap ("key_" + $keys[$i].id + ".png") 9 8 (0xE330 + $i))) }
+$prov.Add((Bitmap 'clock.png' 9 8 0xE340))
+$prov.Add((Bitmap 'hourglass.png' 9 8 0xE341))
+$prov.Add((Bitmap 'mouse_left.png' 9 8 0xE342))
+$prov.Add((Bitmap 'mouse_right.png' 9 8 0xE343))
+$prov.Add((Bitmap 'line.png' 9 8 0xE350))
+$prov.Add((Bitmap 'bar.png' 9 8 0xE351))
+$prov.Add('{"type":"space","advances":{"' + (U 0xE3F1) + '":1,"' + (U 0xE3F2) + '":2,"' + (U 0xE3F4) + '":4,"' + (U 0xE3F8) + '":8,"' + (U 0xE3FA) + '":10,"' + (U 0xE3FF) + '":-1}}')
 $json = '{"providers":[' + ($prov -join ',') + ']}'
 [IO.File]::WriteAllText((Join-Path $fontDir 'ui.json'), $json, ([Text.UTF8Encoding]::new($false)))
 Write-Host "ui 글꼴: $($kinds.Count)개 -> $root\assets"
