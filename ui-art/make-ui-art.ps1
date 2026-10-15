@@ -3,6 +3,7 @@
 #   E320~E324  능력 갈래 배지 (지금은 안 씀)   E330~E334  키 모양 (지금은 안 씀)
 #   E340 시계(쿨타임) E341 모래시계(지속) E342 마우스 좌클릭 E343 마우스 우클릭
 #   E350 구분선   E351 세로 막대(창 이름·능력 구획 앞, 글자색으로 물듦)
+#   E360 [신고하기] 단추  E361 [디스코드] 단추 (/신고 안내 채팅)
 #   E3F1 = 1칸 띄움, E3F2 = 2칸, E3FA = 10칸(아이콘 폭, 여러 줄 채팅 들여쓰기), E3FF = -1칸
 # 그림은 GUI 크기 3 기준(글자 한 칸 = 3픽셀)으로 그린다. 결과는 이 폴더의 assets/ 아래.
 
@@ -221,6 +222,22 @@ $cv = New-Canvas 6 27
 $cv.g.FillRectangle([Drawing.Brushes]::White, 0, 1, 6, 25)
 Save $cv 'bar.png'
 
+# ── 채팅 단추 (E360~) — 채팅에서 누르는 단추. 아래 3픽셀을 어둡게 해 눌리는 단추처럼 보이게 한다 ──
+$buttons = @(
+    @{ id='report';  label='신고하기'; fill='#E5484D'; shade='#9E2A2E' },
+    @{ id='discord'; label='디스코드'; fill='#5865F2'; shade='#3A43A8' }
+)
+foreach ($b in $buttons) {
+    $H = 27; $em = 18
+    $tw = (TextPath $b.label $em 0 0).GetBounds().Width
+    $W = [int]([Math]::Ceiling(($tw + 24) / 3.0) * 3)
+    $cv = New-Canvas $W $H; $g = $cv.g
+    $g.FillPath([Drawing.SolidBrush]::new((C $b.shade)), (RoundRect 0.5 1 ($W - 1) ($H - 1.5) 6))
+    $g.FillPath([Drawing.SolidBrush]::new((C $b.fill)), (RoundRect 0.5 1 ($W - 1) ($H - 4.5) 6))
+    $g.FillPath([Drawing.SolidBrush]::new((C '#FFFFFF')), (TextPath $b.label $em ($W / 2) (($H - 3) / 2 + 1)))
+    Save $cv ("button_" + $b.id + ".png")
+}
+
 # ── 글꼴 설정 ───────────────────────────────────────────────────────────
 function U([int]$cp) { '\u{0:X4}' -f $cp }
 function Bitmap([string]$file, [int]$height, [int]$ascent, [int]$cp) {
@@ -238,6 +255,7 @@ $prov.Add((Bitmap 'mouse_left.png' 9 8 0xE342))
 $prov.Add((Bitmap 'mouse_right.png' 9 8 0xE343))
 $prov.Add((Bitmap 'line.png' 9 8 0xE350))
 $prov.Add((Bitmap 'bar.png' 9 8 0xE351))
+for ($i = 0; $i -lt $buttons.Count; $i++) { $prov.Add((Bitmap ("button_" + $buttons[$i].id + ".png") 9 8 (0xE360 + $i))) }
 $prov.Add('{"type":"space","advances":{"' + (U 0xE3F1) + '":1,"' + (U 0xE3F2) + '":2,"' + (U 0xE3F4) + '":4,"' + (U 0xE3F8) + '":8,"' + (U 0xE3FA) + '":10,"' + (U 0xE3FF) + '":-1}}')
 $json = '{"providers":[' + ($prov -join ',') + ']}'
 [IO.File]::WriteAllText((Join-Path $fontDir 'ui.json'), $json, ([Text.UTF8Encoding]::new($false)))
