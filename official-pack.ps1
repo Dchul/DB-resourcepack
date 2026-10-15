@@ -2,8 +2,10 @@
 # 공식 서버에는 치장(HMCCosmetics)·도구 치장·펫(ModelEngine)·칭호가 없으므로 그 자산을 걷어 낸다.
 # DB_full.zip이 바뀌면 이 스크립트를 다시 돌린 뒤 README의 갱신 절차를 따른다.
 #
-# 공식 서버는 2026-10-16부터 Paperlogy 글꼴을 쓰지 않는다(기본 마인크래프트 글꼴). 글꼴 파일을 버리고
-# 글꼴 설정의 ttf 항목을 지운다 — 그 뒤에 있던 기본 글꼴 참조가 그대로 남아 기본 글꼴로 그려진다.
+# 공식 서버 글꼴은 DeltaDotumKR(fonts/DeltaDotumKR.ttf, 2026-10-16 소유자 지정, 크기 11)이다. Paperlogy 파일과
+# ttf 항목을 지운 뒤, 본문·볼드·부제·타이틀 여섯 벌의 기본 글꼴 참조 바로 앞에 DeltaDotumKR 항목을 넣는다.
+# 볼드 전용 글꼴 파일은 없다 — 굵기는 마인크래프트 볼드(겹쳐 그리기)로 낸다(소유자 결정).
+# 해상도 배수는 GUI 크기 3 기준: 본문 3, 부제(2배 확대) 6, 타이틀(4배 확대) 12.
 #
 # 셰이더(modelengine_* 겹침 폴더와 루트 셰이더)는 남긴다. 루트 셰이더는 옛 버전용이라
 # 겹침 폴더만 지우면 최신 손님에게 옛 셰이더가 적용돼 팩이 깨질 수 있다.
@@ -33,6 +35,21 @@ $drop = @(
     '^assets/minecraft/font/paperlogy[^/]*\.ttf$'           # Paperlogy 글꼴
 )
 
+$FontSize = 11
+$FontFile = "$PSScriptRoot\fonts\DeltaDotumKR.ttf"
+$FontJsons = @{
+    'assets/minecraft/font/default.json' = 3; 'assets/taggame/font/bold.json'     = 3
+    'assets/taggame/font/mid.json'       = 6; 'assets/taggame/font/mid_bold.json' = 6
+    'assets/taggame/font/big.json'       = 12; 'assets/taggame/font/big_bold.json' = 12
+}
+
+function Add-Delta([string]$json, [int]$oversample) {
+    $prov = '{"type":"ttf","file":"minecraft:deltadotum.ttf","size":' + $FontSize + ',"oversample":' + $oversample + '},'
+    $rx = [regex]'\{\s*"type"\s*:\s*"reference"\s*,\s*"id"\s*:\s*"minecraft:include/space"\s*\}'
+    if (-not $rx.IsMatch($json)) { throw "기본 글꼴 참조가 없음" }
+    return $rx.Replace($json, { param($m) $prov + $m.Value }, 1)
+}
+
 # 글꼴 파일 안에서 지울 그림 항목 (위에서 버린 그림을 가리키는 것)
 $deadGlyph = 'taggame:(font/title/|gui/(cos_|tool_|pet_list|gacha_preview))'
 
@@ -59,6 +76,7 @@ try {
             if ($name -match '^assets/[^/]+/font/[^/]+\.json$') {
                 $reader = New-Object IO.StreamReader($src, [Text.Encoding]::UTF8)
                 $text = Remove-DeadProviders $reader.ReadToEnd()
+                if ($FontJsons.ContainsKey($name)) { $text = Add-Delta $text $FontJsons[$name] }
                 $bytes = (New-Object Text.UTF8Encoding($false)).GetBytes($text)
                 $dst.Write($bytes, 0, $bytes.Length)
             } else {
@@ -67,6 +85,8 @@ try {
         } finally { $src.Dispose(); $dst.Dispose() }
         $kept++
     }
+    $fe = $out.CreateEntry('assets/minecraft/font/deltadotum.ttf', [IO.Compression.CompressionLevel]::Optimal)
+    $fs = $fe.Open(); $fb = [IO.File]::ReadAllBytes($FontFile); $fs.Write($fb, 0, $fb.Length); $fs.Dispose()
 } finally { $in.Dispose(); $out.Dispose() }
 
 Write-Host "kept $kept, dropped $dropped -> $Output"
