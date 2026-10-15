@@ -1,6 +1,9 @@
-# 공식 서버용 팩(DB_official.zip)을 DB_full.zip에서 만든다.
+﻿# 공식 서버용 팩(DB_official.zip)을 DB_full.zip에서 만든다.
 # 공식 서버에는 치장(HMCCosmetics)·도구 치장·펫(ModelEngine)·칭호가 없으므로 그 자산을 걷어 낸다.
 # DB_full.zip이 바뀌면 이 스크립트를 다시 돌린 뒤 README의 갱신 절차를 따른다.
+#
+# 공식 서버는 2026-10-16부터 Paperlogy 글꼴을 쓰지 않는다(기본 마인크래프트 글꼴). 글꼴 파일을 버리고
+# 글꼴 설정의 ttf 항목을 지운다 — 그 뒤에 있던 기본 글꼴 참조가 그대로 남아 기본 글꼴로 그려진다.
 #
 # 셰이더(modelengine_* 겹침 폴더와 루트 셰이더)는 남긴다. 루트 셰이더는 옛 버전용이라
 # 겹침 폴더만 지우면 최신 손님에게 옛 셰이더가 적용돼 팩이 깨질 수 있다.
@@ -26,7 +29,8 @@ $drop = @(
     '^assets/minecraft/font/title\.json$',                 # 칭호 그림 글자
     '^assets/taggame/textures/font/title/',
     '^assets/taggame/(items|models/item|textures/item)/(title_|cos_|pet_)',  # 칭호·치장·치이카와 펫 칸 그림
-    '^assets/taggame/textures/gui/(cos_|tool_|pet_list|gacha_preview)'
+    '^assets/taggame/textures/gui/(cos_|tool_|pet_list|gacha_preview)',
+    '^assets/minecraft/font/paperlogy[^/]*\.ttf$'           # Paperlogy 글꼴
 )
 
 # 글꼴 파일 안에서 지울 그림 항목 (위에서 버린 그림을 가리키는 것)
@@ -35,6 +39,8 @@ $deadGlyph = 'taggame:(font/title/|gui/(cos_|tool_|pet_list|gacha_preview))'
 function Remove-DeadProviders([string]$json) {
     # 그림 항목은 중괄호가 겹치지 않는 평평한 객체라 통째로 들어낼 수 있다
     $json = [regex]::Replace($json, '\s*\{[^{}]*"' + $deadGlyph + '[^"]*"[^{}]*\}\s*,?', '')
+    # Paperlogy 글꼴 항목 (역시 평평한 객체)
+    $json = [regex]::Replace($json, '\s*\{[^{}]*"type"\s*:\s*"ttf"[^{}]*\}\s*,?', '')
     # 마지막 항목을 지웠을 때 남는 쉼표 정리
     return [regex]::Replace($json, ',(\s*)\]', '$1]')
 }
