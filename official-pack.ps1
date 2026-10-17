@@ -93,6 +93,13 @@ try {
     $fs = $fe.Open(); $fb = [IO.File]::ReadAllBytes($FontFile); $fs.Write($fb, 0, $fb.Length); $fs.Dispose()
     $fe = $out.CreateEntry('assets/minecraft/font/galmuri11_bold.ttf', [IO.Compression.CompressionLevel]::Optimal)
     $fs = $fe.Open(); $fb = [IO.File]::ReadAllBytes($BoldFile); $fs.Write($fb, 0, $fb.Length); $fs.Dispose()
+    # 통계 창 그림(공식 서버 전용, stat-art\make-stat-art.py가 만든 것)
+    $statRoot = "$PSScriptRoot\stat-art"
+    if (-not (Test-Path "$statRoot\assets")) { throw "stat-art\assets가 없습니다. make-stat-art.py를 먼저 돌리세요." }
+    foreach ($f in Get-ChildItem "$statRoot\assets" -Recurse -File) {
+        $fe = $out.CreateEntry($f.FullName.Substring($statRoot.Length + 1).Replace('\', '/'), [IO.Compression.CompressionLevel]::Optimal)
+        $fs = $fe.Open(); $fb = [IO.File]::ReadAllBytes($f.FullName); $fs.Write($fb, 0, $fb.Length); $fs.Dispose()
+    }
 } finally { $in.Dispose(); $out.Dispose() }
 
 Write-Host "kept $kept, dropped $dropped -> $Output"
