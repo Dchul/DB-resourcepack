@@ -34,6 +34,7 @@ $drop = @(
     '^assets/taggame/textures/font/title/',
     '^assets/taggame/(items|models/item|textures/item)/(title_|cos_|pet_)',  # 칭호·치장·치이카와 펫 칸 그림
     '^assets/taggame/textures/gui/(cos_|tool_|pet_list|gacha_preview)',
+    '^assets/minecraft/textures/gui/container/generic_54\.png$',  # 상자 창 바탕은 바닐라 그대로 (2026-10-17 소유자 지시)
     '^assets/minecraft/font/paperlogy[^/]*\.ttf$'           # Paperlogy 글꼴
 )
 
