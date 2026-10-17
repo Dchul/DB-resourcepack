@@ -101,6 +101,12 @@ try {
         $fe = $out.CreateEntry($f.FullName.Substring($statRoot.Length + 1).Replace('\', '/'), [IO.Compression.CompressionLevel]::Optimal)
         $fs = $fe.Open(); $fb = [IO.File]::ReadAllBytes($f.FullName); $fs.Write($fb, 0, $fb.Length); $fs.Dispose()
     }
+    # 손으로 만든 공식 서버 전용 자산(메뉴 창의 늘 도는 만회 나침반 등). stat-art는 스크립트가 통째로 다시 만들어서 따로 둔다
+    $extraRoot = "$PSScriptRoot\official-extra"
+    foreach ($f in Get-ChildItem "$extraRoot\assets" -Recurse -File) {
+        $fe = $out.CreateEntry($f.FullName.Substring($extraRoot.Length + 1).Replace('\', '/'), [IO.Compression.CompressionLevel]::Optimal)
+        $fs = $fe.Open(); $fb = [IO.File]::ReadAllBytes($f.FullName); $fs.Write($fb, 0, $fb.Length); $fs.Dispose()
+    }
 } finally { $in.Dispose(); $out.Dispose() }
 
 Write-Host "kept $kept, dropped $dropped -> $Output"
